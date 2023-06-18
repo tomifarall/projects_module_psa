@@ -13,13 +13,12 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long code;
+    private Long id;
 
     private String name;
 
@@ -48,8 +47,8 @@ public class Project {
         this.tasksQuantity = tasksQuantity;
     }
 
-    public Long getCode(){
-        return this.code;
+    public Long getId(){
+        return this.id;
     }
 
     public String getName(){
