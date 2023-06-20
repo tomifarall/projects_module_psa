@@ -1,5 +1,7 @@
 package com.pca.projects.projects_module.model;
 
+import com.pca.projects.projects_module.controller.DTO.ProjectDTO;
+import com.pca.projects.projects_module.utils.ProjectStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,12 +10,14 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Project {
 
     @Id
@@ -24,7 +28,7 @@ public class Project {
 
     private String description;
 
-    private Integer status;
+    private ProjectStatus status;
 
     private Date startDate;
 
@@ -32,76 +36,21 @@ public class Project {
 
     private Double hoursWorked;
 
-    private Double tasksQuantity;
+    private Integer tasksQuantity;
 
-    public Project(){
-    }
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ProjectTask> projectTasks;
 
-    public Project(String name, String description, Integer status, Date startDate, Date endDate, Double hoursWorked, Double tasksQuantity){
-        this.name = name;
-        this.description = description;
-        this.status = status;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.hoursWorked = hoursWorked;
-        this.tasksQuantity = tasksQuantity;
+    public ProjectDTO convertToDTO() {
+        return ProjectDTO.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .startDate(startDate)
+                .endDate(endDate)
+                .hoursWorked(hoursWorked)
+                .tasksQuantity(tasksQuantity)
+                .tasks(projectTasks)
+                .build();
     }
-
-    public Long getId(){
-        return this.id;
-    }
-
-    public String getName(){
-        return this.name;
-    }
-
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public String getDescription(){
-        return this.description;
-    }
-
-    public void setDescription(String description){
-        this.description = description;
-    }
-
-    public Integer getStatus(){
-        return this.status;
-    }
-
-    public void setStatus(Integer status){
-        this.status = status;
-    }
-
-    public Date getStartDate(){
-        return this.startDate;
-    }
-
-    public void setStartDate(Date startDate){
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate(){
-        return this.endDate;
-    }
-    public void setEndDate(Date endDate){
-        this.endDate = endDate;
-    }
-
-    public Double getHoursWorked(){
-        return this.hoursWorked;
-    }
-    public void setHoursWorked(Double hoursWorked){
-        this.hoursWorked = hoursWorked;
-    }
-
-    public Double getTasksQuantity(){
-        return this.tasksQuantity;
-    }
-    public void setTasksQuantity(Double tasksQuantity){
-        this.tasksQuantity = tasksQuantity;
-    }
-
 }
