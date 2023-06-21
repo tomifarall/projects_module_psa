@@ -1,4 +1,4 @@
 .gradle/
 .idea/
-build/
+./projects_module/build/
 !gradle/wrapper/gradle-wrapper.jar
