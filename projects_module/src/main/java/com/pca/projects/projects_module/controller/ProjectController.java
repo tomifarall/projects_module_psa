@@ -11,7 +11,6 @@ import java.util.Collection;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-
 public class ProjectController {
 
     private final ProjectService projectService;
