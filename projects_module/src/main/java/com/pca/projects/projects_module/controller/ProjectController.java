@@ -25,10 +25,9 @@ public class ProjectController {
         return projectService.getProjects();
     }
 
-    @GetMapping("/projects/{code}")
-    public ProjectDTO getProject(@PathVariable Long code) {
-        /* Internally, We are going to use "id" instead of "code" */
-        Project project = projectService.findById(code);
+    @GetMapping("/projects/{id}")
+    public ProjectDTO getProject(@PathVariable Long id) {
+        Project project = projectService.findById(id);
         return project.convertToDTO();
     }
 
@@ -40,12 +39,12 @@ public class ProjectController {
     }
 
     @PutMapping("/projects/{code}")
-    public ProjectDTO updateProject(@PathVariable Long code, @RequestBody ProjectDTO projectDTO) {
-        return projectService.updateProject(code, projectDTO);
+    public ProjectDTO updateProject(@PathVariable Long id, @RequestBody ProjectDTO projectDTO) {
+        return projectService.updateProject(id, projectDTO);
     }
 
     @DeleteMapping("/projects/{code}")
-    public void deleteProject(@PathVariable Long code) {
-        projectService.deleteProject(code);
+    public void deleteProject(@PathVariable Long id) {
+        projectService.deleteProject(id);
     }
 }

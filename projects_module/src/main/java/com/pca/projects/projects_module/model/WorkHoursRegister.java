@@ -1,9 +1,6 @@
 package com.pca.projects.projects_module.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,6 +10,7 @@ import java.util.Date;
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class WorkHoursRegister {
 
     @Id
@@ -20,19 +18,11 @@ public class WorkHoursRegister {
     private Long id;
 
     private Date dateOfWork;
+
     private Double amountHours;
+
     private String employeeId;
 
     @ManyToOne(fetch=FetchType.LAZY)
     private ProjectTask task;
-
-    public WorkHoursRegister(){
-    }
-
-    public WorkHoursRegister(Date dateOfWork, Double amountHours, String employeeId) {
-        this.dateOfWork = dateOfWork;
-        this.amountHours = amountHours;
-        this.employeeId = employeeId;
-    }
-
 }

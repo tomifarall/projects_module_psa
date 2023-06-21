@@ -84,8 +84,6 @@ public class ProjectService {
 
         projectRepository.saveAndFlush(projectToUpdate);
         return projectToUpdate.convertToDTO();
-
-
     }
 
     public void deleteProject(Long code) {

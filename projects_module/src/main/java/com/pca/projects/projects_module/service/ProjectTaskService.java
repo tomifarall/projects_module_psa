@@ -62,13 +62,12 @@ public class ProjectTaskService {
     }
 
     private void validateTaskData(ProjectTask task) {
-        boolean isProjectInvalid = StringUtils.isEmpty(task.getTitle())
+        boolean isTaskInvalid = StringUtils.isEmpty(task.getTitle())
                 || StringUtils.isEmpty(task.getDescription())
                 || Objects.nonNull(task.getEstimatedTime())
-                || Objects.nonNull(task.getEndDate())
                 || Objects.nonNull(task.getEmployeeId()); //ver que otros atributos agregar
 
-        if (isProjectInvalid) throw new InvalidTaskException("Task data is invalid.");
+        if (isTaskInvalid) throw new InvalidTaskException("Task data is invalid.");
     }
 
     public Collection<ProjectTask> getTasksByProject(Long code) {
@@ -78,6 +77,7 @@ public class ProjectTaskService {
     public TaskDTO updateTask(TaskDTO task, Long id) {
         ProjectTask taskToUpdate = findById(id);
         if (!StringUtils.isEmpty(task.getStatus())) {
+            // TODO: CHECK TRANSITION STATUS
             taskToUpdate.setStatus(TaskStatus.getStatusById(task.getStatus()));
         }
         if (!StringUtils.isEmpty(task.getDescription())) {
