@@ -7,7 +7,7 @@ public enum ProjectStatus {
     WORKING("working"),
     FINISHED("finished");
 
-    private String id;
+    private final String id;
     ProjectStatus(String id) {
         this.id = id;
     }

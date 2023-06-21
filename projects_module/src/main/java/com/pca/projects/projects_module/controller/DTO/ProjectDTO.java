@@ -30,7 +30,7 @@ public class ProjectDTO {
 
     private Integer tasksQuantity;
 
-    private List<ProjectTask> tasks;
+    private List<TaskDTO> tasks;
 
     public Project convertToEntity() {
         return Project.builder()
