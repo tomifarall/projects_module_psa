@@ -46,7 +46,7 @@ public class ProjectService {
     @Transactional
     public Project create(Project project) {
         validateProjectData(project);
-        project.setStatus(ProjectStatus.PENDING);
+        project.setStatus(ProjectStatus.FINISHED);
         project.setHoursWorked(0D);
         project.setTasksQuantity(0);
         projectRepository.save(project);

@@ -38,12 +38,12 @@ public class ProjectController {
         return projectService.createToDTO(projectToCreate);
     }
 
-    @PutMapping("/projects/{code}")
+    @PutMapping("/projects/{id}")
     public ProjectDTO updateProject(@PathVariable Long id, @RequestBody ProjectDTO projectDTO) {
         return projectService.updateProject(id, projectDTO);
     }
 
-    @DeleteMapping("/projects/{code}")
+    @DeleteMapping("/projects/{id}")
     public void deleteProject(@PathVariable Long id) {
         projectService.deleteProject(id);
     }

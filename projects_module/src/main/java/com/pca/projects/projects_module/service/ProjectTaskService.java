@@ -4,6 +4,7 @@ import com.pca.projects.projects_module.controller.DTO.TaskDTO;
 import com.pca.projects.projects_module.exception.InvalidTaskException;
 import com.pca.projects.projects_module.exception.NoWorkHoursRegistriesException;
 import com.pca.projects.projects_module.exception.TaskNotFoundException;
+import com.pca.projects.projects_module.model.Project;
 import com.pca.projects.projects_module.model.ProjectTask;
 import com.pca.projects.projects_module.model.WorkHoursRegister;
 import com.pca.projects.projects_module.repository.ProjectTaskRepository;
@@ -51,10 +52,12 @@ public class ProjectTaskService {
         projectTaskRepository.save(task);
     }
 
-    public TaskDTO createTask(ProjectTask task) {
+    public TaskDTO createTask(Long projectId, ProjectTask task) {
+        Project project = projectService.findById(projectId);
         validateTaskData(task);
         task.setStatus(TaskStatus.PENDING);
         task.setStartDate(new Date()); //ver si inicializar otros datos
+        task.setProject(project);
         return projectTaskRepository.save(task).convertToDTO();
     }
 

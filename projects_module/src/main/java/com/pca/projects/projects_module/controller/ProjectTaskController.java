@@ -1,6 +1,7 @@
 package com.pca.projects.projects_module.controller;
 
 import com.pca.projects.projects_module.controller.DTO.TaskDTO;
+import com.pca.projects.projects_module.model.Project;
 import com.pca.projects.projects_module.model.ProjectTask;
 import com.pca.projects.projects_module.model.WorkHoursRegister;
 import com.pca.projects.projects_module.service.ProjectTaskService;
@@ -20,9 +21,14 @@ public class ProjectTaskController {
         this.projectTaskService = projectTaskService;
     }
 
-    @GetMapping("/project/{code}/task")
-    public Collection<ProjectTask> getTasksByProjectCode(@PathVariable Long code) {
-        return projectTaskService.getTasksByProject(code);
+    @GetMapping("/projectsTask")
+    public Collection<ProjectTask> getProjectTask() {
+        return projectTaskService.getProjectTasks();
+    }
+
+    @GetMapping("/projects/{id}/tasks")
+    public Collection<ProjectTask> getTasksByProjectId(@PathVariable Long id) {
+        return projectTaskService.getTasksByProject(id);
     }
 
     @GetMapping("/projectsTask/{id}")
@@ -30,10 +36,10 @@ public class ProjectTaskController {
         return projectTaskService.findById(id).convertToDTO();
     }
 
-    @PostMapping("/projectsTask")
+    @PostMapping("/projects/{id}/tasks")
     @ResponseStatus(HttpStatus.CREATED)
-    public TaskDTO createTask(@RequestBody TaskDTO task) {
-        return projectTaskService.createTask(task.convertToEntity());
+    public TaskDTO createTask(@PathVariable Long id, @RequestBody TaskDTO task) {
+        return projectTaskService.createTask(id, task.convertToEntity());
     }
 
     @DeleteMapping("/projectsTask/{id}")

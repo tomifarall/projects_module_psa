@@ -43,7 +43,7 @@ public class Project {
     @Column(name = "hours_worked")
     private Double hoursWorked;
 
-    @Column(name = "task_quantity")
+    @Column(name = "tasks_quantity")
     private Integer tasksQuantity;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
