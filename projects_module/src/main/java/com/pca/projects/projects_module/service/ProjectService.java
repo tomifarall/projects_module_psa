@@ -56,8 +56,8 @@ public class ProjectService {
     private void validateProjectData(Project project) {
         boolean isProjectInvalid = StringUtils.isEmpty(project.getName())
                 || StringUtils.isEmpty(project.getDescription())
-                || Objects.nonNull(project.getStartDate())
-                || Objects.nonNull(project.getEndDate());
+                || Objects.isNull(project.getStartDate())
+                || Objects.isNull(project.getEndDate());
 
         if (isProjectInvalid) throw new InvalidProjectException("Project data is invalid.");
     }

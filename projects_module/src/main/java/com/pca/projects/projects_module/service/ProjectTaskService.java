@@ -1,15 +1,12 @@
 package com.pca.projects.projects_module.service;
 
 import com.pca.projects.projects_module.controller.DTO.TaskDTO;
-import com.pca.projects.projects_module.exception.InvalidProjectException;
 import com.pca.projects.projects_module.exception.InvalidTaskException;
 import com.pca.projects.projects_module.exception.NoWorkHoursRegistriesException;
 import com.pca.projects.projects_module.exception.TaskNotFoundException;
-import com.pca.projects.projects_module.model.Project;
 import com.pca.projects.projects_module.model.ProjectTask;
 import com.pca.projects.projects_module.model.WorkHoursRegister;
 import com.pca.projects.projects_module.repository.ProjectTaskRepository;
-import com.pca.projects.projects_module.utils.ProjectStatus;
 import com.pca.projects.projects_module.utils.TaskStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,8 +61,8 @@ public class ProjectTaskService {
     private void validateTaskData(ProjectTask task) {
         boolean isTaskInvalid = StringUtils.isEmpty(task.getTitle())
                 || StringUtils.isEmpty(task.getDescription())
-                || Objects.nonNull(task.getEstimatedTime())
-                || Objects.nonNull(task.getEmployeeId()); //ver que otros atributos agregar
+                || Objects.isNull(task.getEstimatedTime())
+                || Objects.isNull(task.getEmployeeId()); //ver que otros atributos agregar
 
         if (isTaskInvalid) throw new InvalidTaskException("Task data is invalid.");
     }

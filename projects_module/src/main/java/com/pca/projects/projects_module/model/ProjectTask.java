@@ -1,7 +1,9 @@
 package com.pca.projects.projects_module.model;
 
 import com.pca.projects.projects_module.controller.DTO.TaskDTO;
+import com.pca.projects.projects_module.utils.TaskPriority;
 import com.pca.projects.projects_module.utils.TaskStatus;
+import com.pca.projects.projects_module.utils.TaskType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,25 +24,35 @@ public class ProjectTask {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "title")
     private String title;
 
+    @Column(name = "description")
     private String description;
 
-    private Integer type_id;
+    @Column(name = "task_type")
+    private TaskType taskType;
 
-    private Integer priority;
+    @Column(name = "task_priority")
+    private TaskPriority taskPriority;
 
+    @Column(name = "status")
     private TaskStatus status;
 
+    @Column(name = "start_date")
     private Date startDate;
 
+    @Column(name = "end_date")
     private Date endDate;
 
+    @Column(name = "estimated_time")
     private Double estimatedTime;
 
-    private String employeeId;
+    @Column(name = "employee_id")
+    private Long employeeId;
 
     @ManyToOne(fetch=FetchType.LAZY)
     private Project project;
@@ -53,8 +65,8 @@ public class ProjectTask {
                 .id(id)
                 .title(title)
                 .description(description)
-                .type_id(type_id)
-                .priority(priority)
+                .taskType(taskType.getId())
+                .taskPriority(taskPriority.getId())
                 .status(status.getId())
                 .startDate(startDate)
                 .endDate(endDate)

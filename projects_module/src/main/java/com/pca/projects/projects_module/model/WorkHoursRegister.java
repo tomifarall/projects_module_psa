@@ -15,13 +15,17 @@ public class WorkHoursRegister {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "date_of_work")
     private Date dateOfWork;
 
+    @Column(name = "amount_hours")
     private Double amountHours;
 
-    private String employeeId;
+    @Column(name = "employee_id")
+    private Long employeeId;
 
     @ManyToOne(fetch=FetchType.LAZY)
     private ProjectTask task;
