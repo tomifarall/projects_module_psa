@@ -1,5 +1,8 @@
 package com.pca.projects.projects_module.model;
 
+import com.pca.projects.projects_module.controller.DTO.ProjectDTO;
+import com.pca.projects.projects_module.controller.DTO.TaskDTO;
+import com.pca.projects.projects_module.utils.TaskStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,10 +27,11 @@ public class ProjectTask {
     private String description;
     private Integer type_id;
     private Integer priority;
-    private String status;
+    private TaskStatus status;
     private Date startDate;
     private Date endDate;
     private Double estimatedTime;
+    private String employeeId;
 
     @ManyToOne(fetch=FetchType.LAZY)
     private Project project;
@@ -38,7 +42,7 @@ public class ProjectTask {
     public ProjectTask(){
     }
 
-    public ProjectTask(String title, String description, Integer type_id, Integer priority, String status, Date startDate, Date endDate, Double estimatedTime){
+    public ProjectTask(String title, String description, Integer type_id, Integer priority, TaskStatus status, Date startDate, Date endDate, Double estimatedTime){
         this.title = title;
         this.description = description;
         this.type_id = type_id;
@@ -73,10 +77,10 @@ public class ProjectTask {
     public void setPriority(Integer priority){
         this.priority = priority;
     }
-    public String getStatus(){
+    public TaskStatus getStatus(){
         return this.status;
     }
-    public void setStatus(String status){
+    public void setStatus(TaskStatus status){
         this.status = status;
     }
     public Date getStartDate(){
@@ -96,5 +100,22 @@ public class ProjectTask {
     }
     public void setEstimatedTime(Double estimatedTime){
         this.estimatedTime = estimatedTime;
+    }
+
+    public TaskDTO convertToDTO() {
+        return TaskDTO.builder()
+                .id(id)
+                .title(title)
+                .description(description)
+                .type_id(type_id)
+                .priority(priority)
+                .status(status.getId())
+                .startDate(startDate)
+                .endDate(endDate)
+                .estimatedTime(estimatedTime)
+                .employeeId(employeeId)
+                .project(project)
+                .timeWorked(timeWorked)
+                .build();
     }
 }

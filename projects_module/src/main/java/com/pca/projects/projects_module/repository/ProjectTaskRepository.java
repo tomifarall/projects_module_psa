@@ -11,4 +11,7 @@ import java.util.Collection;
 public interface ProjectTaskRepository extends JpaRepository<ProjectTask, Long> {
 
     Collection<ProjectTask> findProjectTasksByProject(Project project);
+
+    ProjectTask findProjectTaskById(Long id);
+
 }

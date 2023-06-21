@@ -1,15 +1,14 @@
 package com.pca.projects.projects_module.controller;
 
+import com.pca.projects.projects_module.controller.DTO.TaskDTO;
 import com.pca.projects.projects_module.model.ProjectTask;
 import com.pca.projects.projects_module.model.WorkHoursRegister;
 import com.pca.projects.projects_module.service.ProjectTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @RestController
 public class ProjectTaskController {
@@ -27,15 +26,14 @@ public class ProjectTaskController {
     }
 
     @GetMapping("/projectsTask/{id}")
-    public ResponseEntity<ProjectTask> getProjectTaskById(@PathVariable Long id) {
-        Optional<ProjectTask> projectOptional = projectTaskService.findById(id);
-        return ResponseEntity.of(projectOptional);
+    public TaskDTO getProjectTaskById(@PathVariable Long id) {
+        return projectTaskService.findById(id).convertToDTO();
     }
 
     @PostMapping("/projectsTask")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProjectTask createTask(@RequestBody ProjectTask task) {
-        return projectTaskService.createTask(task);
+    public TaskDTO createTask(@RequestBody TaskDTO task) {
+        return projectTaskService.createTask(task.convertToEntity());
     }
 
     @DeleteMapping("/projectsTask/{id}")
@@ -44,7 +42,7 @@ public class ProjectTaskController {
     }
 
     @PutMapping("/projectsTask/{id}")
-    public ResponseEntity<ProjectTask> updateTask(@RequestBody ProjectTask task, @PathVariable Long id) {
+    public TaskDTO updateTask(@RequestBody TaskDTO task, @PathVariable Long id) {
         return projectTaskService.updateTask(task, id);
     }
 
@@ -57,4 +55,5 @@ public class ProjectTaskController {
     public Double getDifferenceEstimatedAndRealHoursTask(@PathVariable Long id) {
         return projectTaskService.getDifferenceEstimatedAndRealHoursTask(id);
     }
+
 }
