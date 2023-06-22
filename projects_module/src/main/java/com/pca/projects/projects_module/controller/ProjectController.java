@@ -6,7 +6,8 @@ import com.pca.projects.projects_module.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -21,8 +22,11 @@ public class ProjectController {
     }
 
     @GetMapping("/projects")
-    public Collection<Project> getProjects() {
-        return projectService.getProjects();
+    public List<ProjectDTO> getProjects() {
+        List<Project> projects = projectService.getProjects();
+        return projects.stream()
+                .map(Project::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/projects/{id}")
