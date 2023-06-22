@@ -19,16 +19,27 @@ import java.util.List;
 public class TaskDTO {
 
     private Long id;
+
     private String title;
+
     private String description;
+
     private String taskType;
+
     private String taskPriority;
+
     private String status;
+
     private Date startDate;
+
     private Date endDate;
+
     private Double estimatedTime;
+
     private Long employeeId;
-    private Project project;
+
+    private ProjectDTO project;
+
     private List<WorkHoursRegister> timeWorked;
 
     public ProjectTask convertToEntity() {
@@ -43,7 +54,6 @@ public class TaskDTO {
                 .endDate(endDate)
                 .estimatedTime(estimatedTime)
                 .employeeId(employeeId)
-                .project(project)
                 .timeWorked(timeWorked)
                 .build();
     }

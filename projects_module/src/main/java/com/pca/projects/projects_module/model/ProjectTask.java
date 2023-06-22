@@ -1,5 +1,6 @@
 package com.pca.projects.projects_module.model;
 
+import com.pca.projects.projects_module.controller.DTO.ProjectDTO;
 import com.pca.projects.projects_module.controller.DTO.TaskDTO;
 import com.pca.projects.projects_module.utils.TaskPriority;
 import com.pca.projects.projects_module.utils.TaskStatus;
@@ -61,6 +62,10 @@ public class ProjectTask {
     private List<WorkHoursRegister> timeWorked;
 
     public TaskDTO convertToDTO() {
+        ProjectDTO projectDTO = ProjectDTO.builder()
+                .name(project.getName())
+                .build();
+
         return TaskDTO.builder()
                 .id(id)
                 .title(title)
@@ -72,7 +77,7 @@ public class ProjectTask {
                 .endDate(endDate)
                 .estimatedTime(estimatedTime)
                 .employeeId(employeeId)
-                .project(project)
+                .project(projectDTO)
                 .timeWorked(timeWorked)
                 .build();
     }
