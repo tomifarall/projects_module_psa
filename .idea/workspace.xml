@@ -5,41 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b3347266-ec3d-4361-926a-63ffff8e4fef" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/projects_module/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/HELP.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/settings.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/ProjectsModuleApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/controller/DTO/ProjectDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/controller/DTO/TaskDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/controller/ProjectController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/controller/ProjectTaskController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/exception/InvalidProjectException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/exception/InvalidTaskException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/exception/NoWorkHoursRegistriesException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/exception/ProjectNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/exception/TaskNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/model/Project.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/model/ProjectTask.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/model/WorkHoursRegister.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/repository/ProjectRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/repository/ProjectTaskRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/repository/WorkHoursRegisterRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/service/ProjectService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/service/ProjectTaskService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/service/WorkHoursRegisterService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/utils/ProjectStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/utils/TaskPriority.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/utils/TaskStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/java/com/pca/projects/projects_module/utils/TaskType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/test/java/com/pca/projects/projects_module/ProjectsModuleApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/test/java/com/pca/projects/projects_module/cucumber/CucumberTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects_module/src/test/resources/cucumber/cucumber_test.feature" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects_module/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,12 +60,13 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/tcasadofaral/Documents/fiuba/projects_module_psa",
+    "last_opened_file_path": "/Users/juliangorge/Desktop/FIUBA/AmInfo/Sin título/projects_module_psa",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>

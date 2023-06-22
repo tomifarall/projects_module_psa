@@ -1,2 +1,3 @@
-projects_module/build
-projects_module/build/*
+/build
+.idea
+.gradle
