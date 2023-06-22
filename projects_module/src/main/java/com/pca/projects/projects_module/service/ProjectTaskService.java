@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +53,7 @@ public class ProjectTaskService {
         projectTaskRepository.save(task);
     }
 
+    @Transactional
     public TaskDTO createTask(Long projectId, ProjectTask task) {
         Project project = projectService.findById(projectId);
         validateTaskData(task);

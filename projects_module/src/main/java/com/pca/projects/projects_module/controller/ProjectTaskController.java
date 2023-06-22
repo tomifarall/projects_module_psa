@@ -1,7 +1,6 @@
 package com.pca.projects.projects_module.controller;
 
 import com.pca.projects.projects_module.controller.DTO.TaskDTO;
-import com.pca.projects.projects_module.model.Project;
 import com.pca.projects.projects_module.model.ProjectTask;
 import com.pca.projects.projects_module.model.WorkHoursRegister;
 import com.pca.projects.projects_module.service.ProjectTaskService;
@@ -9,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class ProjectTaskController {
@@ -22,13 +22,17 @@ public class ProjectTaskController {
     }
 
     @GetMapping("/projectsTask")
-    public Collection<ProjectTask> getProjectTask() {
-        return projectTaskService.getProjectTasks();
+    public List<TaskDTO> getProjectTask() {
+        return projectTaskService.getProjectTasks().stream()
+                .map(ProjectTask::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/projects/{id}/tasks")
-    public Collection<ProjectTask> getTasksByProjectId(@PathVariable Long id) {
-        return projectTaskService.getTasksByProject(id);
+    public List<TaskDTO> getTasksByProjectId(@PathVariable Long id) {
+        return projectTaskService.getTasksByProject(id).stream()
+                .map(ProjectTask::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/projectsTask/{id}")
