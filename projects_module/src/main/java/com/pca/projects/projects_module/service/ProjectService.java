@@ -64,7 +64,7 @@ public class ProjectService {
         if (isProjectInvalid) throw new InvalidProjectException("Project data is invalid.");
     }
 
-    public ProjectDTO updateProject(Long code, ProjectDTO projectDTO) {
+    public Project updateProject(Long code, ProjectDTO projectDTO) {
         Project projectToUpdate = projectRepository.findProjectById(code);
 
         if (!StringUtils.isEmpty(projectDTO.getName())) {
@@ -85,7 +85,7 @@ public class ProjectService {
         }
 
         projectRepository.saveAndFlush(projectToUpdate);
-        return projectToUpdate.convertToDTO();
+        return projectToUpdate;
     }
 
     public void deleteProject(Long code) {

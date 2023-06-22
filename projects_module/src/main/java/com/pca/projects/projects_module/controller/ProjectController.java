@@ -44,7 +44,8 @@ public class ProjectController {
 
     @PutMapping("/projects/{id}")
     public ProjectDTO updateProject(@PathVariable Long id, @RequestBody ProjectDTO projectDTO) {
-        return projectService.updateProject(id, projectDTO);
+        Project updatedProject = projectService.updateProject(id, projectDTO);
+        return updatedProject.convertToDTO();
     }
 
     @DeleteMapping("/projects/{id}")
