@@ -1,4 +1,0 @@
-.gradle/
-.idea/
-./projects_module/build/
-!gradle/wrapper/gradle-wrapper.jar
