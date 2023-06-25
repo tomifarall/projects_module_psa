@@ -1,13 +1,14 @@
 package com.pca.projects.projects_module.controller.DTO;
 
-import com.pca.projects.projects_module.model.Project;
 import com.pca.projects.projects_module.model.ProjectTask;
 import com.pca.projects.projects_module.model.WorkHoursRegister;
 import com.pca.projects.projects_module.utils.TaskPriority;
 import com.pca.projects.projects_module.utils.TaskStatus;
 import com.pca.projects.projects_module.utils.TaskType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
@@ -16,6 +17,8 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class TaskDTO {
 
     private Long id;

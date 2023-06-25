@@ -9,12 +9,15 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
 public abstract class ApiClient {
     private static final String BASE_URL = "https://rrhh-squad6-1c2023.onrender.com/";
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Autowired
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final CloseableHttpClient httpClient;
 
     public ApiClient() {
