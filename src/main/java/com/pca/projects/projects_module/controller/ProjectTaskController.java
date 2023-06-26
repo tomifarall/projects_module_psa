@@ -25,8 +25,8 @@ public class ProjectTaskController {
         this.projectTaskService = projectTaskService;
     }
 
-    @ApiOperation("Obtener todas las tareas del proyecto")
-    @GetMapping("/projectsTask")
+    @ApiOperation("Obtener todas las tareas de todos los proyectos")
+    @GetMapping("/projects/tasks")
     public List<TaskDTO> getProjectTask() {
         return projectTaskService.getProjectTasks().stream()
                 .map(ProjectTask::convertToDTO)
@@ -42,7 +42,7 @@ public class ProjectTaskController {
     }
 
     @ApiOperation("Obtener una tarea por su ID")
-    @GetMapping("/projectsTask/{id}")
+    @GetMapping("/projects/tasks/{id}")
     public TaskDTO getProjectTaskById(@ApiParam(value = "ID de la tarea", example = "1") @PathVariable Long id) {
         return projectTaskService.findById(id).convertToDTO();
     }
@@ -55,25 +55,25 @@ public class ProjectTaskController {
     }
 
     @ApiOperation("Eliminar una tarea")
-    @DeleteMapping("/projectsTask/{id}")
+    @DeleteMapping("/projects/tasks/{id}")
     public void deleteTask(@ApiParam(value = "ID de la tarea", example = "1") @PathVariable Long id) {
         projectTaskService.deleteTask(id);
     }
 
     @ApiOperation("Actualizar una tarea")
-    @PutMapping("/projectsTask/{id}")
+    @PutMapping("/projects/tasks/{id}")
     public TaskDTO updateTask(@RequestBody TaskDTO task, @ApiParam(value = "ID de la tarea", example = "1") @PathVariable Long id) {
         return projectTaskService.updateTask(task, id);
     }
 
     @ApiOperation("Cargar horas de trabajo en una tarea")
-    @PutMapping("/projectsTask/{id}/loadWorkHours")
+    @PutMapping("/projects/tasks/{id}/loadWorkHours")
     public WorkHoursRegister loadWorkHours(@ApiParam(value = "ID de la tarea", example = "1") @PathVariable Long id, @RequestBody WorkHoursRegister workHours) {
         return projectTaskService.loadWorkHours(id, workHours);
     }
 
     @ApiOperation("Obtener la diferencia entre las horas estimadas y reales de una tarea")
-    @GetMapping("/projectsTask/{id}/estimatedDifference")
+    @GetMapping("/projects/tasks/{id}/estimatedDifference")
     public Double getDifferenceEstimatedAndRealHoursTask(@ApiParam(value = "ID de la tarea", example = "1") @PathVariable Long id) {
         return projectTaskService.getDifferenceEstimatedAndRealHoursTask(id);
     }
