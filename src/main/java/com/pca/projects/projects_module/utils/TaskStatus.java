@@ -5,6 +5,7 @@ import java.util.Objects;
 public enum TaskStatus {
     PENDING("pending"),
     WORKING("working"),
+    REVIEWING("reviewing"),
     FINISHED("finished");
 
     private String id;

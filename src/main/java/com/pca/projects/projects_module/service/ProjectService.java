@@ -11,10 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -48,7 +46,7 @@ public class ProjectService {
     @Transactional
     public Project create(Project project) {
         validateProjectData(project);
-        project.setStatus(ProjectStatus.FINISHED);
+        project.setStatus(ProjectStatus.STARTING);
         project.setHoursWorked(0D);
         project.setTasksQuantity(0);
         projectRepository.save(project);
@@ -92,5 +90,9 @@ public class ProjectService {
         Project projectToDelete = projectRepository.findProjectById(code);
         //TODO: ALGUNA VERIFICACIÓN??
         projectRepository.delete(projectToDelete);
+    }
+
+    public List<Project> search(String name) {
+        return projectRepository.findProjectByNameContaining(name);
     }
 }

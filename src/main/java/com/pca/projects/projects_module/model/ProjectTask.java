@@ -64,6 +64,7 @@ public class ProjectTask {
 
     public TaskDTO convertToDTO() {
         ProjectDTO projectDTO = ProjectDTO.builder()
+                .id(project.getId())
                 .name(project.getName())
                 .build();
 

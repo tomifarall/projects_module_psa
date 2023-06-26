@@ -3,8 +3,9 @@ package com.pca.projects.projects_module.utils;
 import java.util.Objects;
 
 public enum ProjectStatus {
-    PENDING("pending"),
-    WORKING("working"),
+    STARTING("starting"),
+    DEVELOPING("developing"),
+    IMPLEMENTATION("implementation"),
     FINISHED("finished");
 
     private final String id;
