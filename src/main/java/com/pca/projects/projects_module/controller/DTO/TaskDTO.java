@@ -13,6 +13,7 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -46,13 +47,25 @@ public class TaskDTO {
     private List<WorkHoursRegister> timeWorked;
 
     public ProjectTask convertToEntity() {
+        TaskType type = Objects.nonNull(taskType)
+                ? TaskType.getTaskTypeById(taskType)
+                : null;
+
+        TaskPriority priority = Objects.nonNull(taskPriority)
+                ? TaskPriority.getTaskTypeById(taskPriority)
+                : null;
+
+        TaskStatus taskStatus = Objects.nonNull(status)
+                ? TaskStatus.getStatusById(status)
+                : null;
+
         return ProjectTask.builder()
                 .id(id)
                 .title(title)
                 .description(description)
-                .taskType(TaskType.getTaskTypeById(taskType))
-                .taskPriority(TaskPriority.getTaskTypeById(taskPriority))
-                .status(TaskStatus.getStatusById(status))
+                .taskType(type)
+                .taskPriority(priority)
+                .status(taskStatus)
                 .startDate(startDate)
                 .endDate(endDate)
                 .estimatedTime(estimatedTime)
