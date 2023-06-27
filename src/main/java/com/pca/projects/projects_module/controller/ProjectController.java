@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Api(tags = "Project Controller")
 public class ProjectController {
 
