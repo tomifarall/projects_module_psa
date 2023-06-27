@@ -4,9 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-public class InvalidTaskException extends RuntimeException {
-
-    public InvalidTaskException(String message) {
-        super(message);
+public class NotFoundException extends BaseAPIException {
+    public NotFoundException(String message, HttpStatus status) {
+        super(message, status);
     }
 }

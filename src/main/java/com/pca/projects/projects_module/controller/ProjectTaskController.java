@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Api(tags = "Project Task Controller")
 public class ProjectTaskController {
 
@@ -50,7 +52,8 @@ public class ProjectTaskController {
     @ApiOperation("Crear una tarea en un proyecto")
     @PostMapping("/projects/{id}/tasks")
     @ResponseStatus(HttpStatus.CREATED)
-    public TaskDTO createTask(@ApiParam(value = "ID del proyecto", example = "1") @PathVariable Long id, @RequestBody TaskDTO task) {
+    public TaskDTO createTask(@ApiParam(value = "ID del proyecto", example = "1") @PathVariable Long id,
+                              @RequestBody TaskDTO task) throws IOException {
         return projectTaskService.createTask(id, task.convertToEntity());
     }
 

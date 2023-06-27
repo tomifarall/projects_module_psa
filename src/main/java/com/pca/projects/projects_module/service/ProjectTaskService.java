@@ -1,19 +1,19 @@
 package com.pca.projects.projects_module.service;
 
 import com.pca.projects.projects_module.controller.DTO.TaskDTO;
-import com.pca.projects.projects_module.exception.InvalidTaskException;
-import com.pca.projects.projects_module.exception.NoWorkHoursRegistriesException;
-import com.pca.projects.projects_module.exception.TaskNotFoundException;
+import com.pca.projects.projects_module.exception.*;
 import com.pca.projects.projects_module.model.Project;
 import com.pca.projects.projects_module.model.ProjectTask;
 import com.pca.projects.projects_module.model.WorkHoursRegister;
 import com.pca.projects.projects_module.repository.ProjectTaskRepository;
+import com.pca.projects.projects_module.service.client.ResourcesClientService;
 import com.pca.projects.projects_module.utils.TaskStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -24,12 +24,18 @@ public class ProjectTaskService {
 
     private final ProjectTaskRepository projectTaskRepository;
     private final ProjectService projectService;
+    private final ResourcesClientService resourcesClientService;
     private final WorkHoursRegisterService workHoursRegisterService;
 
+
     @Autowired
-    public ProjectTaskService(final ProjectTaskRepository projectTaskRepository, final ProjectService projectService, final WorkHoursRegisterService workHoursRegisterService) {
+    public ProjectTaskService(final ProjectTaskRepository projectTaskRepository,
+                              final ProjectService projectService,
+                              final ResourcesClientService resourcesClientService,
+                              final WorkHoursRegisterService workHoursRegisterService) {
         this.projectTaskRepository = projectTaskRepository;
         this.projectService = projectService;
+        this.resourcesClientService = resourcesClientService;
         this.workHoursRegisterService = workHoursRegisterService;
     }
 
@@ -54,7 +60,7 @@ public class ProjectTaskService {
     }
 
     @Transactional
-    public TaskDTO createTask(Long projectId, ProjectTask task) {
+    public TaskDTO createTask(Long projectId, ProjectTask task) throws IOException {
         Project project = projectService.findById(projectId);
         validateTaskData(task);
         task.setStatus(TaskStatus.PENDING);
@@ -63,13 +69,27 @@ public class ProjectTaskService {
         return projectTaskRepository.save(task).convertToDTO();
     }
 
-    private void validateTaskData(ProjectTask task) {
+    private void validateEmployee(Long employeeId) throws IOException {
+        try {
+            resourcesClientService.getResource(employeeId);
+        } catch (NotFoundException notFoundException) {
+            throw new InvalidEmployeeException("Employee does not exist.");
+        }
+    }
+
+    private void validateTaskData(ProjectTask task) throws IOException {
         boolean isTaskInvalid = StringUtils.isEmpty(task.getTitle())
                 || StringUtils.isEmpty(task.getDescription())
                 || Objects.isNull(task.getEstimatedTime())
-                || Objects.isNull(task.getEmployeeId()); //ver que otros atributos agregar
+                || Objects.isNull(task.getEmployeeId())
+                || Objects.isNull(task.getTaskType())
+                || Objects.isNull(task.getTaskPriority());
 
-        if (isTaskInvalid) throw new InvalidTaskException("Task data is invalid.");
+        if (isTaskInvalid) {
+            throw new InvalidTaskException("Task data is invalid. " +
+                    "Title, description, estimatedTime, employeeId, type or priority is missing.");
+        }
+        validateEmployee(task.getEmployeeId());
     }
 
     public Collection<ProjectTask> getTasksByProject(Long code) {
