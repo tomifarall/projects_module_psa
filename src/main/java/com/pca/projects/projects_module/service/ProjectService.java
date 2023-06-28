@@ -122,7 +122,7 @@ public class ProjectService {
         return project;
     }
 
-    public Project updateProject(Long code, ProjectDTO projectDTO) {
+    public ProjectDTO updateProject(Long code, ProjectDTO projectDTO) {
         Project projectToUpdate = projectRepository.findProjectById(code);
 
         if (!StringUtils.isEmpty(projectDTO.getName())) {
@@ -136,14 +136,12 @@ public class ProjectService {
         }
         if (Objects.nonNull(projectDTO.getEndDate())) {
             projectToUpdate.setEndDate(projectDTO.getEndDate());
-
         }
         if (Objects.nonNull(projectDTO.getStatus())) {
             projectToUpdate.setStatus(ProjectStatus.getStatusById(projectDTO.getStatus()));
         }
-
-        projectRepository.saveAndFlush(projectToUpdate);
-        return projectToUpdate;
+        Project updatedProject = projectRepository.save(projectToUpdate);
+        return formatProject(updatedProject);
     }
 
     public void deleteProject(Long code) {

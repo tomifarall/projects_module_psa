@@ -53,8 +53,7 @@ public class ProjectController {
     @ApiOperation("Actualizar un proyecto existente")
     @PutMapping("/projects/{id}")
     public ProjectDTO updateProject(@ApiParam(value = "ID del proyecto", example = "1") @PathVariable Long id, @RequestBody ProjectDTO projectDTO) {
-        Project updatedProject = projectService.updateProject(id, projectDTO);
-        return updatedProject.convertToDTO();
+        return projectService.updateProject(id, projectDTO);
     }
 
     @ApiOperation("Eliminar un proyecto")

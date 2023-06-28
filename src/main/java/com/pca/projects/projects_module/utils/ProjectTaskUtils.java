@@ -6,7 +6,9 @@ import com.pca.projects.projects_module.model.ProjectTask;
 import com.pca.projects.projects_module.service.ProjectTaskService;
 import com.pca.projects.projects_module.service.client.DTO.ResourceDTO;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ProjectTaskUtils {
@@ -31,6 +33,7 @@ public class ProjectTaskUtils {
 
     public static List<TaskDTO> formatProjectTasks (List<ProjectTask> projectTasks,
                                                     ProjectTaskService projectTaskService) {
+        if (Objects.isNull(projectTasks)) return Collections.emptyList();
         return projectTasks.stream()
                 .parallel()
                 .map(task -> formatProjectTask(task, projectTaskService))
