@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.pca.projects'
-version = '1'
+version = '2'
 sourceCompatibility = '11'
 
 configurations {
