@@ -10,12 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-//@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Api(tags = "Project Controller")
 public class ProjectController {
 
@@ -29,26 +27,19 @@ public class ProjectController {
     @ApiOperation("Obtener todos los proyectos")
     @GetMapping("/projects")
     public List<ProjectDTO> getProjects() {
-        List<Project> projects = projectService.getProjects();
-        return projects.stream()
-                .map(Project::convertToDTO)
-                .collect(Collectors.toList());
+        return projectService.getAllProjects();
     }
 
     @ApiOperation("Obtener un proyecto por su ID")
     @GetMapping("/projects/{id}")
     public ProjectDTO getProject(@ApiParam(value = "ID del proyecto", example = "1") @PathVariable Long id) {
-        Project project = projectService.findById(id);
-        return project.convertToDTO();
+        return projectService.getProject(id);
     }
 
     @ApiOperation("Buscar proyectos por nombre")
     @GetMapping("/projects/search")
     public List<ProjectDTO> searchProjects(@ApiParam(value = "Nombre del proyecto") @RequestParam String name) {
-        List<Project> projects = projectService.search(name);
-        return projects.stream()
-                .map(Project::convertToDTO)
-                .collect(Collectors.toList());
+        return projectService.search(name);
     }
 
     @ApiOperation("Crear un nuevo proyecto")

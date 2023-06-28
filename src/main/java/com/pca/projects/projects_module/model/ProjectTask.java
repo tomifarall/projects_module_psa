@@ -13,7 +13,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Getter
@@ -59,9 +58,6 @@ public class ProjectTask {
     @ManyToOne(fetch=FetchType.LAZY)
     private Project project;
 
-    @OneToMany(mappedBy="task")
-    private List<WorkHoursRegister> timeWorked;
-
     public TaskDTO convertToDTO() {
         ProjectDTO projectDTO = ProjectDTO.builder()
                 .id(project.getId())
@@ -80,7 +76,6 @@ public class ProjectTask {
                 .estimatedTime(estimatedTime)
                 .employeeId(employeeId)
                 .project(projectDTO)
-                .timeWorked(timeWorked)
                 .build();
     }
 }

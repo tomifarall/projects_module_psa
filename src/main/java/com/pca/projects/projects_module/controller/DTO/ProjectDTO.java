@@ -26,15 +26,17 @@ public class ProjectDTO {
 
     private String status;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date endDate;
 
     private Double hoursWorked;
 
     private Integer tasksQuantity;
+
+    private Long versionId;
+
+    private String versionCode;
 
     private List<TaskDTO> tasks;
 
@@ -44,6 +46,7 @@ public class ProjectDTO {
                 .description(description)
                 .startDate(startDate)
                 .endDate(endDate)
+                .versionId(versionId)
                 .build();
     }
 }

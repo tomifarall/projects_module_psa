@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 
 @Configuration
 public class ObjectMapperConfig {
-    private static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+    private static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd";
 
     @Bean
     @Primary

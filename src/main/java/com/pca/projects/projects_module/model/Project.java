@@ -51,6 +51,9 @@ public class Project {
     @Column(name = "tasks_quantity")
     private Integer tasksQuantity;
 
+    @Column(name = "version_id")
+    private Long versionId;
+
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProjectTask> projectTasks;
 
@@ -69,6 +72,7 @@ public class Project {
                 .startDate(startDate)
                 .status(status.getId())
                 .endDate(endDate)
+                .versionId(versionId)
                 .hoursWorked(hoursWorked)
                 .tasksQuantity(tasksQuantity)
                 .tasks(tasks)

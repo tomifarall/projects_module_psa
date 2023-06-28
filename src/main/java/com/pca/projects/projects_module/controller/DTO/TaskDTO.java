@@ -1,7 +1,7 @@
 package com.pca.projects.projects_module.controller.DTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pca.projects.projects_module.model.ProjectTask;
-import com.pca.projects.projects_module.model.WorkHoursRegister;
 import com.pca.projects.projects_module.utils.TaskPriority;
 import com.pca.projects.projects_module.utils.TaskStatus;
 import com.pca.projects.projects_module.utils.TaskType;
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -42,9 +41,11 @@ public class TaskDTO {
 
     private Long employeeId;
 
+    private EmployeeDTO employeeInfo;
+
     private ProjectDTO project;
 
-    private List<WorkHoursRegister> timeWorked;
+    private Double timeWorked;
 
     public ProjectTask convertToEntity() {
         TaskType type = Objects.nonNull(taskType)
@@ -70,7 +71,6 @@ public class TaskDTO {
                 .endDate(endDate)
                 .estimatedTime(estimatedTime)
                 .employeeId(employeeId)
-                .timeWorked(timeWorked)
                 .build();
     }
 }
