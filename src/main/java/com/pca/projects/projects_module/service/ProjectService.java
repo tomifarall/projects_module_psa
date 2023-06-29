@@ -97,11 +97,11 @@ public class ProjectService {
 
     private ProjectDTO formatProject(Project project) {
         ProjectDTO formattedProject = project.convertToDTO();
-        List<TaskDTO> projectTasks = formatProjectTasks(project.getProjectTasks(), projectTaskService);
+        //List<TaskDTO> projectTasks = formatProjectTasks(project.getProjectTasks(), projectTaskService);
         VersionDTO versionAssociatedToProject = supportClientService.getVersion(project.getVersionId());
-        formattedProject.setTasks(projectTasks);
+        //formattedProject.setTasks(projectTasks);
         formattedProject.setTasksQuantity(project.getProjectTasks().size());
-        formattedProject.setHoursWorked(getProjectTotalHoursWorked(projectTasks));
+        //formattedProject.setHoursWorked(getProjectTotalHoursWorked(projectTasks));
         formattedProject.setVersionCode(versionAssociatedToProject.getVersionCode());
         return formattedProject;
     }
