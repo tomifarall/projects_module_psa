@@ -8,9 +8,9 @@ import com.pca.projects.projects_module.repository.ProjectTaskRepository;
 import com.pca.projects.projects_module.service.client.DTO.HoursRegisterDTO;
 import com.pca.projects.projects_module.service.client.DTO.ResourceDTO;
 import com.pca.projects.projects_module.service.client.ResourcesClientService;
+import com.pca.projects.projects_module.service.client.SupportClientService;
 import com.pca.projects.projects_module.utils.TaskStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,14 +30,18 @@ public class ProjectTaskService {
     private final ProjectService projectService;
     private final ResourcesClientService resourcesClientService;
 
+    private final SupportClientService supportClientService;
+
 
     @Autowired
     public ProjectTaskService(final ProjectTaskRepository projectTaskRepository,
                               final ProjectService projectService,
-                              final ResourcesClientService resourcesClientService) {
+                              final ResourcesClientService resourcesClientService,
+                              final SupportClientService supportClientService) {
         this.projectTaskRepository = projectTaskRepository;
         this.projectService = projectService;
         this.resourcesClientService = resourcesClientService;
+        this.supportClientService = supportClientService;
     }
 
     public List<ProjectTask> findAllProjectTasks() {
@@ -75,7 +79,9 @@ public class ProjectTaskService {
         return formatProjectTask(task, this);
     }
 
+    @Transactional
     public void deleteTask(Long id) {
+        supportClientService.deleteTaskFromTicket(id);
         projectTaskRepository.deleteById(id);
     }
 

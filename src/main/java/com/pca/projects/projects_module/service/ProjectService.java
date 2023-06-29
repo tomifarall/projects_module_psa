@@ -170,8 +170,10 @@ public class ProjectService {
         project.setStatus(projectStatus);
     }
 
+    @Transactional
     public void deleteProject(Long code) {
         Project projectToDelete = projectRepository.findProjectById(code);
+        supportClientService.deleteProjectFromVersion(projectToDelete.getVersionId());
         projectRepository.delete(projectToDelete);
     }
 
