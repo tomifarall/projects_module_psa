@@ -8,11 +8,13 @@ import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Calendar;
 import java.util.Date;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ProjectTest extends ProjectIntegrationServiceTest {
@@ -22,14 +24,15 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
 
     private Project project;
     private InvalidProjectException ipe;
-/*    private InsufficientFundsException ife;
-    private DepositNegativeSumException dnse;
+//    private InsufficientFundsException ife;
+ //   private DepositNegativeSumException dnse;
 
     @Before
     public void setup() {
         System.out.println("Before any test execution");
+        this.ipe = null;
     }
-
+/*
     @Given("^Account with a balance of (\\d+)$")
     public void account_with_a_balance_of(int balance)  {
         account = createAccount(Double.valueOf(balance));
@@ -120,8 +123,26 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         }
     }
 
-    @Then("^No se puede crear el proyecto por fecha de inicio mayor a fecha de fin$")
-    public void noSePuedeCrearElProyectoPorFechaDeInicioMayorAFechaDeFin() {
+    @Then("^No se puede crear el proyecto por error de fecha de fin menor a fecha de inicio$")
+    public void noSePuedeCrearElProyectoPorFechaDeFinMenorAFechaDeInicio() {
         assertNotNull(this.ipe);
+        assertEquals(this.ipe.getMessage(),"\"The end date can't be lower than the start date\"");
+    }
+
+    @When("^Ingreso los datos de nombre y descripcion y ningun otro dato mas$")
+    public void ingresoLosDatosDeNombreYDescripcionYNingunOtroDatoMas() {
+        project.setDescription("project description");
+        project.setName("project");
+        try {
+            project = projectService.create(project);
+        } catch(InvalidProjectException e) {
+            this.ipe = e;
+        }
+    }
+
+    @Then("^No se puede crear el proyecto por error de datos invalidos$")
+    public void noSePuedeCrearElProyectoPorDatosInvalidos() {
+        assertNotNull(this.ipe);
+        assertEquals(this.ipe.getMessage(),"Project data is invalid.");
     }
 }
