@@ -1,13 +1,14 @@
 package com.pca.projects.projects_module.service;
 
 import com.pca.projects.projects_module.controller.DTO.ProjectDTO;
-import com.pca.projects.projects_module.controller.DTO.TaskDTO;
 import com.pca.projects.projects_module.exception.InvalidProjectException;
 import com.pca.projects.projects_module.exception.ProjectNotFoundException;
 import com.pca.projects.projects_module.exception.VersionAlreadyHasProjectException;
 import com.pca.projects.projects_module.model.Project;
 import com.pca.projects.projects_module.repository.ProjectRepository;
+import com.pca.projects.projects_module.service.client.DTO.HoursRegisterDTO;
 import com.pca.projects.projects_module.service.client.DTO.VersionDTO;
+import com.pca.projects.projects_module.service.client.ResourcesClientService;
 import com.pca.projects.projects_module.service.client.SupportClientService;
 import com.pca.projects.projects_module.utils.ProjectStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,12 +32,15 @@ public class ProjectService {
 
     private final SupportClientService supportClientService;
 
+    private final ResourcesClientService resourcesClientService;
+
     @Autowired
     public ProjectService(final ProjectRepository projectRepository, final ProjectTaskService projectTaskService,
-                          final SupportClientService supportClientService) {
+                          final SupportClientService supportClientService, final ResourcesClientService resourcesClientService) {
         this.projectRepository = projectRepository;
         this.projectTaskService = projectTaskService;
         this.supportClientService = supportClientService;
+        this.resourcesClientService = resourcesClientService;
     }
 
 
@@ -50,7 +55,8 @@ public class ProjectService {
                 || StringUtils.isEmpty(project.getDescription())
                 || Objects.isNull(project.getStartDate())
                 || Objects.isNull(project.getEndDate())
-                || Objects.isNull(project.getVersionId());
+                || Objects.isNull(project.getVersionId())
+                || Objects.isNull(project.getResponsibleId());
 
         if (isProjectInvalid) throw new InvalidProjectException("Project data is invalid.");
     }
@@ -85,7 +91,7 @@ public class ProjectService {
     public List<ProjectDTO> getAllProjects() {
         List<Project> projects = projectRepository.findAll();
         return projects.stream()
-                .map(this::formatProject)
+                .map(Project::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -97,20 +103,19 @@ public class ProjectService {
 
     private ProjectDTO formatProject(Project project) {
         ProjectDTO formattedProject = project.convertToDTO();
-        List<TaskDTO> projectTasks = formatProjectTasks(project.getProjectTasks(), projectTaskService);
+        //List<TaskDTO> projectTasks = formatProjectTasks(project.getProjectTasks(), projectTaskService);
         VersionDTO versionAssociatedToProject = supportClientService.getVersion(project.getVersionId());
-
-
-        formattedProject.setTasks(projectTasks);
-        formattedProject.setTasksQuantity(projectTasks.size());
-        formattedProject.setHoursWorked(getProjectTotalHoursWorked(projectTasks));
+        //formattedProject.setTasks(projectTasks);
+        formattedProject.setTasksQuantity(formattedProject.getTasks().size());
+        formattedProject.setHoursWorked(getProjectTotalHoursWorked(project));
         formattedProject.setVersionCode(versionAssociatedToProject.getVersionCode());
         return formattedProject;
     }
 
-    private Double getProjectTotalHoursWorked(List<TaskDTO> projectTask) {
-        return projectTask.stream()
-                .map(TaskDTO::getTimeWorked)
+    private Double getProjectTotalHoursWorked(Project project) {
+        List<HoursRegisterDTO> projectHoursRegisters = resourcesClientService.getResourceRegistersByProject(project.getId());
+        return projectHoursRegisters.stream()
+                .map(HoursRegisterDTO::getHours)
                 .reduce(0D, Double::sum);
     }
 
@@ -138,10 +143,19 @@ public class ProjectService {
             projectToUpdate.setEndDate(projectDTO.getEndDate());
         }
         if (Objects.nonNull(projectDTO.getStatus())) {
-            projectToUpdate.setStatus(ProjectStatus.getStatusById(projectDTO.getStatus()));
+            ProjectStatus newProjectStatus = ProjectStatus.getStatusById(projectDTO.getStatus());
+            checkAndSetProjectStatus(projectToUpdate, newProjectStatus);
         }
         Project updatedProject = projectRepository.save(projectToUpdate);
         return formatProject(updatedProject);
+    }
+
+    private void checkAndSetProjectStatus(Project project, ProjectStatus projectStatus) {
+        project.getStatus().checkTransitionStatus(projectStatus);
+        if (ProjectStatus.FINISHED.equals(projectStatus)) {
+            project.setEndDate(new Date());
+        }
+        project.setStatus(projectStatus);
     }
 
     public void deleteProject(Long code) {
@@ -152,7 +166,7 @@ public class ProjectService {
     public List<ProjectDTO> search(String name) {
         List<Project> projects = projectRepository.findProjectByNameContainingIgnoreCase(name);
         return projects.stream()
-                .map(this::formatProject)
+                .map(Project::convertToDTO)
                 .collect(Collectors.toList());
     }
 }

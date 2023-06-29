@@ -36,7 +36,7 @@ public class ProjectTaskUtils {
         if (Objects.isNull(projectTasks)) return Collections.emptyList();
         return projectTasks.stream()
                 .parallel()
-                .map(task -> formatProjectTask(task, projectTaskService))
+                .map(ProjectTask::convertToDTO)
                 .collect(Collectors.toList());
     }
 }

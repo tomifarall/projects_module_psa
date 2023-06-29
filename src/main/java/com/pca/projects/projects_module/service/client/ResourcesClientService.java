@@ -14,9 +14,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class ResourcesClientService extends ApiClient {
-    private static final String RESOURCE_URL = "https://rrhh-squad6-1c2023.onrender.com//recursos/%d";
+    private static final String RESOURCE_URL = "https://rrhh-squad6-1c2023.onrender.com/recursos/%d";
 
-    private static final String RESOURCES_REGISTER_BY_TASK_URL = "https://rrhh-squad6-1c2023.onrender.com//recursos/%d/registros?idProyecto=%d&idTarea=%d";
+    private static final String RESOURCES_REGISTER_BY_TASK_URL = "https://rrhh-squad6-1c2023.onrender.com/recursos/%d/registros?idProyecto=%d&idTarea=%d";
+
+    private static final String RESOURCES_REGISTER_BY_PROJECT_URL = "https://rrhh-squad6-1c2023.onrender.com/recursos/registros?idProyecto=%d";
 
     public ResourceDTO getResource(Long resourceId) {
         ResourceDTO resourceDTO = null;
@@ -36,6 +38,20 @@ public class ResourcesClientService extends ApiClient {
             hoursRegisterDTOS = get(String.format(RESOURCES_REGISTER_BY_TASK_URL, resourceId, projectId, taskId), HoursRegisterDTO[].class);
         } catch (HttpStatusCodeException ex) {
             handleClientException(ex, "getResourceRegistersByTask");
+        } catch (IOException ignored) {
+
+        }
+        return Objects.nonNull(hoursRegisterDTOS)
+                ? Arrays.stream(hoursRegisterDTOS).collect(Collectors.toList())
+                : Collections.emptyList();
+    }
+
+    public List<HoursRegisterDTO> getResourceRegistersByProject(Long projectId) {
+        HoursRegisterDTO[] hoursRegisterDTOS = null;
+        try {
+            hoursRegisterDTOS = get(String.format(RESOURCES_REGISTER_BY_PROJECT_URL, projectId), HoursRegisterDTO[].class);
+        } catch (HttpStatusCodeException ex) {
+            handleClientException(ex, "getResourceRegistersByProject");
         } catch (IOException ignored) {
 
         }
