@@ -126,7 +126,8 @@ public class ProjectTaskService {
     public TaskDTO updateTask(TaskDTO task, Long id) {
         ProjectTask taskToUpdate = findById(id);
         if (!StringUtils.isEmpty(task.getStatus())) {
-            taskToUpdate.setStatus(TaskStatus.getStatusById(task.getStatus()));
+            TaskStatus newTaskStatus = TaskStatus.getStatusById(task.getStatus());
+            checkAndSetTaskStatus(taskToUpdate, newTaskStatus);
         }
         if (!StringUtils.isEmpty(task.getDescription())) {
             taskToUpdate.setDescription(task.getDescription());
@@ -144,6 +145,17 @@ public class ProjectTaskService {
         projectTaskRepository.saveAndFlush(taskToUpdate);
 
         return formatProjectTask(taskToUpdate, this);
+    }
+
+    private void checkAndSetTaskStatus(ProjectTask task, TaskStatus taskStatus) {
+        task.getStatus().checkTransitionStatus(taskStatus);
+        if (TaskStatus.WORKING.equals(taskStatus)) {
+            task.setStartDate(new Date());
+        }
+        if (TaskStatus.FINISHED.equals(taskStatus)) {
+            task.setEndDate(new Date());
+        }
+        task.setStatus(taskStatus);
     }
 
     public List<TaskDTO> search(String title) {

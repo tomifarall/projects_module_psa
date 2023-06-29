@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -143,10 +144,19 @@ public class ProjectService {
             projectToUpdate.setEndDate(projectDTO.getEndDate());
         }
         if (Objects.nonNull(projectDTO.getStatus())) {
-            projectToUpdate.setStatus(ProjectStatus.getStatusById(projectDTO.getStatus()));
+            ProjectStatus newProjectStatus = ProjectStatus.getStatusById(projectDTO.getStatus());
+            checkAndSetProjectStatus(projectToUpdate, newProjectStatus);
         }
         Project updatedProject = projectRepository.save(projectToUpdate);
         return formatProject(updatedProject);
+    }
+
+    private void checkAndSetProjectStatus(Project project, ProjectStatus projectStatus) {
+        project.getStatus().checkTransitionStatus(projectStatus);
+        if (ProjectStatus.FINISHED.equals(projectStatus)) {
+            project.setEndDate(new Date());
+        }
+        project.setStatus(projectStatus);
     }
 
     public void deleteProject(Long code) {
