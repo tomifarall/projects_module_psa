@@ -12,7 +12,7 @@ public class SupportClientService extends ApiClient {
 
     private static final String DELETE_PROJECT_VERSION_URL = "https://apisoporte.onrender.com/versiones/%d/proyectos";
 
-    private static final String DELETE_TASk_FROM_TICKET_URL = "https://apisoporte.onrender.com//tareasAsignadas/{idTarea}/tareas";
+    private static final String DELETE_TASk_FROM_TICKET_URL = "https://apisoporte.onrender.com/tareasAsignadas/%d/tareas";
 
     public VersionDTO updateVersion(Long versionId, VersionDTO body) {
         VersionDTO versionDTO = null;
@@ -36,7 +36,7 @@ public class SupportClientService extends ApiClient {
 
     public void deleteTaskFromTicket(Long taskId) {
         try {
-            delete(String.format(DELETE_PROJECT_VERSION_URL, taskId), VersionDTO.class);
+            delete(String.format(DELETE_TASk_FROM_TICKET_URL, taskId), VersionDTO.class);
         } catch (HttpStatusCodeException ex) {
             handleClientException(ex, "deleteTaskFromTicket");
         } catch (IOException ignored) {
