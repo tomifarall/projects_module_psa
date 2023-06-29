@@ -1,5 +1,6 @@
 package com.pca.projects.projects_module.service;
 
+import com.pca.projects.projects_module.controller.DTO.ProjectDTO;
 import com.pca.projects.projects_module.controller.DTO.TaskDTO;
 import com.pca.projects.projects_module.exception.*;
 import com.pca.projects.projects_module.model.Project;
@@ -15,8 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.pca.projects.projects_module.utils.ProjectTaskUtils.formatProjectTask;
 import static com.pca.projects.projects_module.utils.ProjectTaskUtils.formatProjectTasks;
@@ -106,7 +109,7 @@ public class ProjectTaskService {
         validateTaskData(task);
         validateEmployee(task.getEmployeeId());
         task.setStatus(TaskStatus.PENDING);
-        //task.setStartDate(new Date());
+        task.setStartDate(new Date());
         task.setProject(project);
         ProjectTask taskCreated = projectTaskRepository.save(task);
         return formatProjectTask(taskCreated, this);
@@ -143,5 +146,12 @@ public class ProjectTaskService {
         projectTaskRepository.saveAndFlush(taskToUpdate);
 
         return formatProjectTask(taskToUpdate, this);
+    }
+
+    public List<TaskDTO> search(String title) {
+        List<ProjectTask> projectTasks = projectTaskRepository.findProjectTasksByTitleContainingIgnoreCase(title);
+        return projectTasks.stream()
+                .map(ProjectTask::convertToDTO)
+                .collect(Collectors.toList());
     }
 }

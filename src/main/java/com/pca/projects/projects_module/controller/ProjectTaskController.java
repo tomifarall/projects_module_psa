@@ -1,5 +1,6 @@
 package com.pca.projects.projects_module.controller;
 
+import com.pca.projects.projects_module.controller.DTO.ProjectDTO;
 import com.pca.projects.projects_module.controller.DTO.TaskDTO;
 import com.pca.projects.projects_module.service.ProjectTaskService;
 import io.swagger.annotations.Api;
@@ -47,6 +48,12 @@ public class ProjectTaskController {
     public TaskDTO createTask(@ApiParam(value = "ID del proyecto", example = "1") @PathVariable Long id,
                               @RequestBody TaskDTO task) {
         return projectTaskService.createTask(id, task.convertToEntity());
+    }
+
+    @ApiOperation("Buscar tareas por nombre")
+    @GetMapping("/projects/{id}/tasks/search")
+    public List<TaskDTO> searchProjectTasks(@ApiParam(value = "Nombre de la tarea") @RequestParam String title) {
+        return projectTaskService.search(title);
     }
 
     @ApiOperation("Eliminar una tarea")
