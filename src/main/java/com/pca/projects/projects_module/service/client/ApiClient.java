@@ -69,6 +69,7 @@ public abstract class ApiClient {
                 String responseString = EntityUtils.toString(entity);
                 return objectMapper.readValue(responseString, responseType);
             }
+            return (T)  responseType;
         }
         throw new HttpClientErrorException(status, response.getStatusLine().getReasonPhrase());
     }
