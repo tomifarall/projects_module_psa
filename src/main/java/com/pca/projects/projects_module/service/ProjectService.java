@@ -107,7 +107,7 @@ public class ProjectService {
         //List<TaskDTO> projectTasks = formatProjectTasks(project.getProjectTasks(), projectTaskService);
         VersionDTO versionAssociatedToProject = supportClientService.getVersion(project.getVersionId());
         //formattedProject.setTasks(projectTasks);
-        formattedProject.setTasksQuantity(project.getProjectTasks().size());
+        formattedProject.setTasksQuantity(formattedProject.getTasks().size());
         formattedProject.setHoursWorked(getProjectTotalHoursWorked(project));
         formattedProject.setVersionCode(versionAssociatedToProject.getVersionCode());
         return formattedProject;
