@@ -53,6 +53,7 @@ public class ProjectService {
                 || Objects.isNull(project.getVersionId());
 
         if (isProjectInvalid) throw new InvalidProjectException("Project data is invalid.");
+        if (project.getStartDate().compareTo(project.getEndDate()) > 0) throw new InvalidProjectException("The start date can't be higher than the end date");
     }
 
     private void validateIfVersionAlreadyBindToProject(Long versionId) {
