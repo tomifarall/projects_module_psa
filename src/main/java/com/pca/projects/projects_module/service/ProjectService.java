@@ -1,7 +1,6 @@
 package com.pca.projects.projects_module.service;
 
 import com.pca.projects.projects_module.controller.DTO.ProjectDTO;
-import com.pca.projects.projects_module.controller.DTO.TaskDTO;
 import com.pca.projects.projects_module.exception.InvalidProjectException;
 import com.pca.projects.projects_module.exception.ProjectNotFoundException;
 import com.pca.projects.projects_module.exception.VersionAlreadyHasProjectException;
@@ -107,7 +106,7 @@ public class ProjectService {
         //List<TaskDTO> projectTasks = formatProjectTasks(project.getProjectTasks(), projectTaskService);
         VersionDTO versionAssociatedToProject = supportClientService.getVersion(project.getVersionId());
         //formattedProject.setTasks(projectTasks);
-        formattedProject.setTasksQuantity(project.getProjectTasks().size());
+        formattedProject.setTasksQuantity(formattedProject.getTasks().size());
         formattedProject.setHoursWorked(getProjectTotalHoursWorked(project));
         formattedProject.setVersionCode(versionAssociatedToProject.getVersionCode());
         return formattedProject;

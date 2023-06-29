@@ -108,7 +108,6 @@ public class ProjectTaskService {
         validateTaskData(task);
         validateEmployee(task.getEmployeeId());
         task.setStatus(TaskStatus.PENDING);
-        task.setStartDate(new Date());
         task.setProject(project);
         ProjectTask taskCreated = projectTaskRepository.save(task);
         return formatProjectTask(taskCreated, this);
