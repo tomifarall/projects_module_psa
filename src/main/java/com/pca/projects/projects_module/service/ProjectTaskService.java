@@ -33,7 +33,7 @@ public class ProjectTaskService {
 
     @Autowired
     public ProjectTaskService(final ProjectTaskRepository projectTaskRepository,
-                              @Lazy final ProjectService projectService,
+                              final ProjectService projectService,
                               final ResourcesClientService resourcesClientService) {
         this.projectTaskRepository = projectTaskRepository;
         this.projectService = projectService;
@@ -67,7 +67,7 @@ public class ProjectTaskService {
 
     public List<TaskDTO> getProjectsTasks() {
         List<ProjectTask> tasks = findAllProjectTasks();
-        return formatProjectTasks(tasks, this);
+        return formatProjectTasks(tasks);
     }
 
     public TaskDTO getProjectTask(Long id) {
@@ -119,7 +119,7 @@ public class ProjectTaskService {
 
     public List<TaskDTO> getTasksByProject(Long projectId) {
         List<ProjectTask> projectTasks = findTasksByProject(projectId);
-        return formatProjectTasks(projectTasks, this);
+        return formatProjectTasks(projectTasks);
     }
 
     public TaskDTO updateTask(TaskDTO task, Long id) {
@@ -148,7 +148,7 @@ public class ProjectTaskService {
 
     private void checkAndSetTaskStatus(ProjectTask task, TaskStatus taskStatus) {
         task.getStatus().checkTransitionStatus(taskStatus);
-        if (TaskStatus.WORKING.equals(taskStatus)) {
+        if(!TaskStatus.PENDING.equals(taskStatus) && Objects.isNull(task.getStartDate())) {
             task.setStartDate(new Date());
         }
         if (TaskStatus.FINISHED.equals(taskStatus)) {
