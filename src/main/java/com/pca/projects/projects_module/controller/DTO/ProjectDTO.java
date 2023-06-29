@@ -1,6 +1,5 @@
 package com.pca.projects.projects_module.controller.DTO;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pca.projects.projects_module.model.Project;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

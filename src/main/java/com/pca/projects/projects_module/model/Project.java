@@ -59,11 +59,11 @@ public class Project {
 
     public ProjectDTO convertToDTO() {
         List<TaskDTO> tasks = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(projectTasks)) {
+        /*if (!CollectionUtils.isEmpty(projectTasks)) {
             tasks.addAll(projectTasks.stream()
                     .map(ProjectTask::convertToDTO)
                     .collect(Collectors.toList()));
-        }
+        }*/
 
         return ProjectDTO.builder()
                 .id(id)
@@ -74,7 +74,7 @@ public class Project {
                 .endDate(endDate)
                 .versionId(versionId)
                 .hoursWorked(hoursWorked)
-                .tasksQuantity(tasksQuantity)
+                //.tasksQuantity(tasks.size())
                 .tasks(tasks)
                 .build();
     }

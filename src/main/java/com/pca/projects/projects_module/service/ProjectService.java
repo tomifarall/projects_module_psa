@@ -85,7 +85,7 @@ public class ProjectService {
     public List<ProjectDTO> getAllProjects() {
         List<Project> projects = projectRepository.findAll();
         return projects.stream()
-                .map(this::formatProject)
+                .map(Project::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -99,16 +99,16 @@ public class ProjectService {
         ProjectDTO formattedProject = project.convertToDTO();
         List<TaskDTO> projectTasks = formatProjectTasks(project.getProjectTasks(), projectTaskService);
         VersionDTO versionAssociatedToProject = supportClientService.getVersion(project.getVersionId());
-
-
         formattedProject.setTasks(projectTasks);
-        formattedProject.setTasksQuantity(projectTasks.size());
+        formattedProject.setTasksQuantity(project.getProjectTasks().size());
         formattedProject.setHoursWorked(getProjectTotalHoursWorked(projectTasks));
         formattedProject.setVersionCode(versionAssociatedToProject.getVersionCode());
         return formattedProject;
     }
 
     private Double getProjectTotalHoursWorked(List<TaskDTO> projectTask) {
+
+
         return projectTask.stream()
                 .map(TaskDTO::getTimeWorked)
                 .reduce(0D, Double::sum);
@@ -152,7 +152,7 @@ public class ProjectService {
     public List<ProjectDTO> search(String name) {
         List<Project> projects = projectRepository.findProjectByNameContainingIgnoreCase(name);
         return projects.stream()
-                .map(this::formatProject)
+                .map(Project::convertToDTO)
                 .collect(Collectors.toList());
     }
 }
