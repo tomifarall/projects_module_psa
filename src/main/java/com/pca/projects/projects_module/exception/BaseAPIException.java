@@ -8,9 +8,9 @@ public class BaseAPIException extends RuntimeException {
     private final HttpStatus status;
     private final String error;
 
-    public BaseAPIException(String message, HttpStatus status) {
+    public BaseAPIException(String message, HttpStatus status, String error) {
         super(message);
         this.status = status;
-        this.error = status.name().toLowerCase();
+        this.error = error;
     }
 }

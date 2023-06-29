@@ -63,6 +63,7 @@ public class ProjectTaskController {
     @ApiOperation("Actualizar una tarea")
     @PutMapping("/projects/tasks/{id}")
     public TaskDTO updateTask(@RequestBody TaskDTO task, @ApiParam(value = "ID de la tarea", example = "1") @PathVariable Long id) {
+
         return projectTaskService.updateTask(task, id);
     }
 }

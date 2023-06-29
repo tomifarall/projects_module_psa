@@ -1,6 +1,7 @@
 package com.pca.projects.projects_module.service;
 
 import com.pca.projects.projects_module.controller.DTO.ProjectDTO;
+import com.pca.projects.projects_module.exception.InvalidDateRangeException;
 import com.pca.projects.projects_module.exception.InvalidProjectException;
 import com.pca.projects.projects_module.exception.ProjectNotFoundException;
 import com.pca.projects.projects_module.exception.VersionAlreadyHasProjectException;
@@ -21,24 +22,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.pca.projects.projects_module.utils.ProjectTaskUtils.formatProjectTasks;
-
 @Service
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-
-    private final ProjectTaskService projectTaskService;
 
     private final SupportClientService supportClientService;
 
     private final ResourcesClientService resourcesClientService;
 
     @Autowired
-    public ProjectService(final ProjectRepository projectRepository, final ProjectTaskService projectTaskService,
-                          final SupportClientService supportClientService, final ResourcesClientService resourcesClientService) {
+    public ProjectService(final ProjectRepository projectRepository,
+                          final SupportClientService supportClientService,
+                          final ResourcesClientService resourcesClientService) {
         this.projectRepository = projectRepository;
-        this.projectTaskService = projectTaskService;
         this.supportClientService = supportClientService;
         this.resourcesClientService = resourcesClientService;
     }
@@ -58,7 +55,17 @@ public class ProjectService {
                 || Objects.isNull(project.getVersionId())
                 || Objects.isNull(project.getResponsibleId());
 
-        if (isProjectInvalid) throw new InvalidProjectException("Project data is invalid.");
+        if (isProjectInvalid) {
+            throw new InvalidProjectException("Project data is invalid.");
+        }
+        checkDateRange(project.getStartDate(), project.getEndDate());
+    }
+
+
+    public void checkDateRange(Date startDate, Date endDate) {
+        if (startDate.compareTo(endDate) > 0) {
+            throw new InvalidDateRangeException("The end date can't be before the start date");
+        }
     }
 
     private void validateIfVersionAlreadyBindToProject(Long versionId) {
@@ -104,11 +111,11 @@ public class ProjectService {
     private ProjectDTO formatProject(Project project) {
         ProjectDTO formattedProject = project.convertToDTO();
         //List<TaskDTO> projectTasks = formatProjectTasks(project.getProjectTasks(), projectTaskService);
-        VersionDTO versionAssociatedToProject = supportClientService.getVersion(project.getVersionId());
+        //VersionDTO versionAssociatedToProject = supportClientService.getVersion(project.getVersionId());
         //formattedProject.setTasks(projectTasks);
-        formattedProject.setTasksQuantity(formattedProject.getTasks().size());
+        //formattedProject.setTasksQuantity(formattedProject.getTasks().size());
         formattedProject.setHoursWorked(getProjectTotalHoursWorked(project));
-        formattedProject.setVersionCode(versionAssociatedToProject.getVersionCode());
+        //formattedProject.setVersionCode(versionAssociatedToProject.getVersionCode());
         return formattedProject;
     }
 
@@ -137,14 +144,19 @@ public class ProjectService {
             projectToUpdate.setDescription(projectDTO.getDescription());
         }
         if (Objects.nonNull(projectDTO.getStartDate())) {
+            checkDateRange(projectDTO.getStartDate(), projectToUpdate.getEndDate());
             projectToUpdate.setStartDate(projectDTO.getStartDate());
         }
         if (Objects.nonNull(projectDTO.getEndDate())) {
+            checkDateRange(projectToUpdate.getStartDate(), projectDTO.getEndDate());
             projectToUpdate.setEndDate(projectDTO.getEndDate());
         }
         if (Objects.nonNull(projectDTO.getStatus())) {
             ProjectStatus newProjectStatus = ProjectStatus.getStatusById(projectDTO.getStatus());
             checkAndSetProjectStatus(projectToUpdate, newProjectStatus);
+        }
+        if (Objects.nonNull(projectDTO.getResponsibleId())) {
+            projectToUpdate.setResponsibleId(projectDTO.getResponsibleId());
         }
         Project updatedProject = projectRepository.save(projectToUpdate);
         return formatProject(updatedProject);
@@ -158,8 +170,10 @@ public class ProjectService {
         project.setStatus(projectStatus);
     }
 
+    @Transactional
     public void deleteProject(Long code) {
         Project projectToDelete = projectRepository.findProjectById(code);
+        supportClientService.deleteProjectFromVersion(projectToDelete.getVersionId());
         projectRepository.delete(projectToDelete);
     }
 

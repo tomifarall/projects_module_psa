@@ -77,13 +77,13 @@ public abstract class ApiClient {
         switch (ex.getStatusCode()) {
             case BAD_REQUEST:
                 throw new BadRequestException(String.format("Bad Request performing method: %s", method),
-                        ex.getStatusCode());
+                        ex.getStatusCode(), HttpStatus.BAD_REQUEST.name().toLowerCase());
             case NOT_FOUND:
                 throw new NotFoundException(String.format("Entity not found performing method: %s", method),
-                        ex.getStatusCode());
+                        ex.getStatusCode(), HttpStatus.NOT_FOUND.name().toLowerCase());
             default:
                 throw new BaseAPIException(String.format("Something went wrong performing method: %s", method),
-                        HttpStatus.INTERNAL_SERVER_ERROR);
+                        HttpStatus.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.name().toLowerCase());
         }
     }
 }

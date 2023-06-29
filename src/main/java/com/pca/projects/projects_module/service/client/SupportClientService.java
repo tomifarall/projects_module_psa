@@ -10,6 +10,10 @@ import java.io.IOException;
 public class SupportClientService extends ApiClient {
     private static final String VERSIONS_URL = "https://apisoporte.onrender.com/versiones/%d";
 
+    private static final String DELETE_PROJECT_VERSION_URL = "https://apisoporte.onrender.com/versiones/%d/proyectos";
+
+    private static final String DELETE_TASk_FROM_TICKET_URL = "https://apisoporte.onrender.com//tareasAsignadas/{idTarea}/tareas";
+
     public VersionDTO updateVersion(Long versionId, VersionDTO body) {
         VersionDTO versionDTO = null;
         try {
@@ -21,14 +25,21 @@ public class SupportClientService extends ApiClient {
         return versionDTO;
     }
 
-    public VersionDTO getVersion(Long versionId) {
-        VersionDTO versionDTO = null;
+    public void deleteProjectFromVersion(Long versionId) {
         try {
-            versionDTO = get(String.format(VERSIONS_URL, versionId), VersionDTO.class);
+            delete(String.format(DELETE_PROJECT_VERSION_URL, versionId), VersionDTO.class);
         } catch (HttpStatusCodeException ex) {
-            handleClientException(ex, "getVersion");
+            handleClientException(ex, "deleteProjectFromVersion");
         } catch (IOException ignored) {
         }
-        return versionDTO;
+    }
+
+    public void deleteTaskFromTicket(Long taskId) {
+        try {
+            delete(String.format(DELETE_PROJECT_VERSION_URL, taskId), VersionDTO.class);
+        } catch (HttpStatusCodeException ex) {
+            handleClientException(ex, "deleteTaskFromTicket");
+        } catch (IOException ignored) {
+        }
     }
 }

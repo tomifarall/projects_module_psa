@@ -8,9 +8,9 @@ import com.pca.projects.projects_module.repository.ProjectTaskRepository;
 import com.pca.projects.projects_module.service.client.DTO.HoursRegisterDTO;
 import com.pca.projects.projects_module.service.client.DTO.ResourceDTO;
 import com.pca.projects.projects_module.service.client.ResourcesClientService;
+import com.pca.projects.projects_module.service.client.SupportClientService;
 import com.pca.projects.projects_module.utils.TaskStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,14 +30,18 @@ public class ProjectTaskService {
     private final ProjectService projectService;
     private final ResourcesClientService resourcesClientService;
 
+    private final SupportClientService supportClientService;
+
 
     @Autowired
     public ProjectTaskService(final ProjectTaskRepository projectTaskRepository,
-                              @Lazy final ProjectService projectService,
-                              final ResourcesClientService resourcesClientService) {
+                              final ProjectService projectService,
+                              final ResourcesClientService resourcesClientService,
+                              final SupportClientService supportClientService) {
         this.projectTaskRepository = projectTaskRepository;
         this.projectService = projectService;
         this.resourcesClientService = resourcesClientService;
+        this.supportClientService = supportClientService;
     }
 
     public List<ProjectTask> findAllProjectTasks() {
@@ -67,7 +71,7 @@ public class ProjectTaskService {
 
     public List<TaskDTO> getProjectsTasks() {
         List<ProjectTask> tasks = findAllProjectTasks();
-        return formatProjectTasks(tasks, this);
+        return formatProjectTasks(tasks);
     }
 
     public TaskDTO getProjectTask(Long id) {
@@ -75,7 +79,9 @@ public class ProjectTaskService {
         return formatProjectTask(task, this);
     }
 
+    @Transactional
     public void deleteTask(Long id) {
+        supportClientService.deleteTaskFromTicket(id);
         projectTaskRepository.deleteById(id);
     }
 
@@ -119,7 +125,7 @@ public class ProjectTaskService {
 
     public List<TaskDTO> getTasksByProject(Long projectId) {
         List<ProjectTask> projectTasks = findTasksByProject(projectId);
-        return formatProjectTasks(projectTasks, this);
+        return formatProjectTasks(projectTasks);
     }
 
     public TaskDTO updateTask(TaskDTO task, Long id) {
@@ -148,7 +154,7 @@ public class ProjectTaskService {
 
     private void checkAndSetTaskStatus(ProjectTask task, TaskStatus taskStatus) {
         task.getStatus().checkTransitionStatus(taskStatus);
-        if (TaskStatus.WORKING.equals(taskStatus)) {
+        if(!TaskStatus.PENDING.equals(taskStatus) && Objects.isNull(task.getStartDate())) {
             task.setStartDate(new Date());
         }
         if (TaskStatus.FINISHED.equals(taskStatus)) {
