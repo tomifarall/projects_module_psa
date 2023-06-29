@@ -29,6 +29,8 @@ public class ProjectDTO {
 
     private Date endDate;
 
+    private Long responsibleId;
+
     private Double hoursWorked;
 
     private Integer tasksQuantity;
@@ -46,6 +48,7 @@ public class ProjectDTO {
                 .startDate(startDate)
                 .endDate(endDate)
                 .versionId(versionId)
+                .responsibleId(responsibleId)
                 .build();
     }
 }

@@ -1,6 +1,5 @@
 package com.pca.projects.projects_module.controller;
 
-import com.pca.projects.projects_module.controller.DTO.ProjectDTO;
 import com.pca.projects.projects_module.controller.DTO.TaskDTO;
 import com.pca.projects.projects_module.service.ProjectTaskService;
 import io.swagger.annotations.Api;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -51,7 +49,7 @@ public class ProjectTaskController {
     }
 
     @ApiOperation("Buscar tareas por nombre")
-    @GetMapping("/projects/{id}/tasks/search")
+    @GetMapping("/projects/tasks/search")
     public List<TaskDTO> searchProjectTasks(@ApiParam(value = "Nombre de la tarea") @RequestParam String title) {
         return projectTaskService.search(title);
     }

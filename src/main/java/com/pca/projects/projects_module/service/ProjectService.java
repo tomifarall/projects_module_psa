@@ -7,7 +7,9 @@ import com.pca.projects.projects_module.exception.ProjectNotFoundException;
 import com.pca.projects.projects_module.exception.VersionAlreadyHasProjectException;
 import com.pca.projects.projects_module.model.Project;
 import com.pca.projects.projects_module.repository.ProjectRepository;
+import com.pca.projects.projects_module.service.client.DTO.HoursRegisterDTO;
 import com.pca.projects.projects_module.service.client.DTO.VersionDTO;
+import com.pca.projects.projects_module.service.client.ResourcesClientService;
 import com.pca.projects.projects_module.service.client.SupportClientService;
 import com.pca.projects.projects_module.utils.ProjectStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +32,15 @@ public class ProjectService {
 
     private final SupportClientService supportClientService;
 
+    private final ResourcesClientService resourcesClientService;
+
     @Autowired
     public ProjectService(final ProjectRepository projectRepository, final ProjectTaskService projectTaskService,
-                          final SupportClientService supportClientService) {
+                          final SupportClientService supportClientService, final ResourcesClientService resourcesClientService) {
         this.projectRepository = projectRepository;
         this.projectTaskService = projectTaskService;
         this.supportClientService = supportClientService;
+        this.resourcesClientService = resourcesClientService;
     }
 
 
@@ -50,7 +55,8 @@ public class ProjectService {
                 || StringUtils.isEmpty(project.getDescription())
                 || Objects.isNull(project.getStartDate())
                 || Objects.isNull(project.getEndDate())
-                || Objects.isNull(project.getVersionId());
+                || Objects.isNull(project.getVersionId())
+                || Objects.isNull(project.getResponsibleId());
 
         if (isProjectInvalid) throw new InvalidProjectException("Project data is invalid.");
     }
@@ -101,16 +107,15 @@ public class ProjectService {
         VersionDTO versionAssociatedToProject = supportClientService.getVersion(project.getVersionId());
         //formattedProject.setTasks(projectTasks);
         formattedProject.setTasksQuantity(project.getProjectTasks().size());
-        //formattedProject.setHoursWorked(getProjectTotalHoursWorked(projectTasks));
+        formattedProject.setHoursWorked(getProjectTotalHoursWorked(project));
         formattedProject.setVersionCode(versionAssociatedToProject.getVersionCode());
         return formattedProject;
     }
 
-    private Double getProjectTotalHoursWorked(List<TaskDTO> projectTask) {
-
-
-        return projectTask.stream()
-                .map(TaskDTO::getTimeWorked)
+    private Double getProjectTotalHoursWorked(Project project) {
+        List<HoursRegisterDTO> projectHoursRegisters = resourcesClientService.getResourceRegistersByProject(project.getId());
+        return projectHoursRegisters.stream()
+                .map(HoursRegisterDTO::getHours)
                 .reduce(0D, Double::sum);
     }
 

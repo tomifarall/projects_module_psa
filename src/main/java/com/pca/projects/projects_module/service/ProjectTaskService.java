@@ -1,6 +1,5 @@
 package com.pca.projects.projects_module.service;
 
-import com.pca.projects.projects_module.controller.DTO.ProjectDTO;
 import com.pca.projects.projects_module.controller.DTO.TaskDTO;
 import com.pca.projects.projects_module.exception.*;
 import com.pca.projects.projects_module.model.Project;
@@ -127,7 +126,6 @@ public class ProjectTaskService {
     public TaskDTO updateTask(TaskDTO task, Long id) {
         ProjectTask taskToUpdate = findById(id);
         if (!StringUtils.isEmpty(task.getStatus())) {
-            // TODO: CHECK TRANSITION STATUS
             taskToUpdate.setStatus(TaskStatus.getStatusById(task.getStatus()));
         }
         if (!StringUtils.isEmpty(task.getDescription())) {
