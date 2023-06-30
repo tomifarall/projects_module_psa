@@ -31,12 +31,11 @@ public class ProjectTaskUtils {
     }
 
 
-    public static List<TaskDTO> formatProjectTasks (List<ProjectTask> projectTasks,
-                                                    ProjectTaskService projectTaskService) {
+    public static List<TaskDTO> formatProjectTasks (List<ProjectTask> projectTasks) {
         if (Objects.isNull(projectTasks)) return Collections.emptyList();
         return projectTasks.stream()
                 .parallel()
-                .map(task -> formatProjectTask(task, projectTaskService))
+                .map(ProjectTask::convertToDTO)
                 .collect(Collectors.toList());
     }
 }

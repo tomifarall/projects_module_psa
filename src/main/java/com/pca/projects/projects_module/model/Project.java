@@ -8,13 +8,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -39,6 +37,9 @@ public class Project {
     @Column(name = "status")
     private ProjectStatus status;
 
+    @Column(name = "responsible_id")
+    private Long responsibleId;
+
     @Column(name = "start_date")
     private Date startDate;
 
@@ -59,11 +60,11 @@ public class Project {
 
     public ProjectDTO convertToDTO() {
         List<TaskDTO> tasks = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(projectTasks)) {
+        /*if (!CollectionUtils.isEmpty(projectTasks)) {
             tasks.addAll(projectTasks.stream()
                     .map(ProjectTask::convertToDTO)
                     .collect(Collectors.toList()));
-        }
+        }*/
 
         return ProjectDTO.builder()
                 .id(id)
@@ -74,7 +75,8 @@ public class Project {
                 .endDate(endDate)
                 .versionId(versionId)
                 .hoursWorked(hoursWorked)
-                .tasksQuantity(tasksQuantity)
+                .responsibleId(responsibleId)
+                //.tasksQuantity(tasks.size())
                 .tasks(tasks)
                 .build();
     }
