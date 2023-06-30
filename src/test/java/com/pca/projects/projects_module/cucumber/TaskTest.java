@@ -9,7 +9,6 @@ import com.pca.projects.projects_module.model.ProjectTask;
 import com.pca.projects.projects_module.repository.ProjectRepository;
 import com.pca.projects.projects_module.repository.ProjectTaskRepository;
 import com.pca.projects.projects_module.service.ProjectTaskService;
-import com.pca.projects.projects_module.service.client.DTO.ResourceDTO;
 import com.pca.projects.projects_module.service.client.ResourcesClientService;
 import com.pca.projects.projects_module.service.client.SupportClientService;
 import com.pca.projects.projects_module.utils.TaskPriority;

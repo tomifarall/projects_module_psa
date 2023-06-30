@@ -2,6 +2,7 @@ package com.pca.projects.projects_module.cucumber;
 
 import com.pca.projects.projects_module.controller.DTO.ProjectDTO;
 import com.pca.projects.projects_module.exception.InvalidProjectException;
+import com.pca.projects.projects_module.exception.VersionAlreadyHasProjectException;
 import com.pca.projects.projects_module.model.Project;
 import com.pca.projects.projects_module.repository.ProjectRepository;
 import com.pca.projects.projects_module.service.ProjectService;
@@ -19,8 +20,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -43,8 +44,7 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
     private ProjectDTO projectDTO;
 
     private InvalidProjectException ipe;
-//    private InsufficientFundsException ife;
- //   private DepositNegativeSumException dnse;
+    private VersionAlreadyHasProjectException vahpe;
 
     @Before
     public void setup() {
@@ -65,7 +65,7 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         project = new Project();
     }
 
-    @When("^Ingreso los datos de nombre, descripcion, fecha de inicio y fecha de fin$")
+    @When("^Ingreso los datos de nombre, descripcion, fecha de inicio, fecha de fin, versión del producto asociado y responsable del proyecto$")
     public void ingresoLosDatosDeNombreDescripcionFechaDeInicioYFechaDeFin() {
         //project = createProject(project,"project", "project description", 1l, new Date(), new Date());
         project.setDescription("project description");
@@ -73,6 +73,7 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         project.setEndDate(new Date());
         project.setName("project");
         project.setVersionId(1l);
+        //project.set MODIFICAR ACA
         Project mockedProject = project;
         mockedProject.setId(0l);
         Mockito.when(projectRepository.findByVersionId(1l)).thenReturn(null);
@@ -86,29 +87,25 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         assertNotNull(project);
     }
 
-    @When("^Ingreso los datos de nombre, descripcion, fecha de inicio y fecha de fin la cual es menor a la fecha de inicio$")
+    @When("^Ingreso los todos los datos solicitados con una fecha de fin menor a la fecha de inicio$")
     public void ingresoLosDatosDeNombreDescripcionFechaDeInicioYFechaDeFinLaCualEsMenorALaFechaDeInicio() {
         project.setDescription("project description");
-        Date biggestDate = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(biggestDate);
-        c.add(Calendar.DATE, 10);
-        biggestDate = c.getTime();
-        project.setStartDate(biggestDate);
-        project.setEndDate(new Date());
+        List<Date> dates = getStartAndEndDates();
+        project.setStartDate(dates.get(1));
+        project.setEndDate(dates.get(0));
         project.setName("project");
-        project.setVersionId(1l);
+        project.setVersionId(1l); //MODIFICAR ACA CON LA ACTUALIZACION
         try {
             project = projectService.create(project);
         } catch(InvalidProjectException e) {
-            this.ipe = e;
+            ipe = e;
         }
     }
 
     @Then("^No se puede crear el proyecto por error de fecha de fin menor a fecha de inicio$")
     public void noSePuedeCrearElProyectoPorFechaDeFinMenorAFechaDeInicio() {
-        assertNotNull(this.ipe);
-        assertEquals(this.ipe.getMessage(),"The end date can't be lower than the start date");
+        assertNotNull(ipe);
+        assertEquals(ipe.getMessage(),"The end date can't be lower than the start date");
     }
 
     @When("^Ingreso los datos de nombre y descripcion y ningun otro dato mas$")
@@ -118,7 +115,7 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         try {
             project = projectService.create(project);
         } catch(InvalidProjectException e) {
-            this.ipe = e;
+            ipe = e;
         }
     }
 
@@ -128,8 +125,8 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         assertEquals(this.ipe.getMessage(),"Project data is invalid.");
     }
 
-    @Given("Quiero modificar un proyecto existente al que pertenezco")
-    public void quieroModificarUnProyectoExistenteAlQuePertenezco() {
+    @Given("Quiero modificar un proyecto existente")
+    public void quieroModificarUnProyectoExistente() {
         project = new Project();
     }
 
@@ -145,8 +142,8 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         assertEquals("nueva descripcion", projectDTO.getDescription());
     }
 
-    @Given("Quiero modificar el nombre y la descripcion de un proyecto existente al que pertenezco")
-    public void quieroModificarElNombreYLaDescripcionDeUnProyectoExistenteAlQuePertenezco() {
+    @Given("Quiero modificar el nombre y la descripcion de un proyecto existente")
+    public void quieroModificarElNombreYLaDescripcionDeUnProyectoExistente() {
         project = createProjectMock("Nombre viejo", "descripcion vieja", 0l, new Date(), new Date(),ProjectStatus.DEVELOPING);
         projectDTO = new ProjectDTO();
         projectDTO.setName("Nuevo nombre");
@@ -177,8 +174,8 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         return project;
     }
 
-    @Given("Quiero modificar el estado de un proyecto existente al que pertenezco")
-    public void quieroModificarElEstadoDeUnProyectoExistenteAlQuePertenezco() {
+    @Given("Quiero modificar el estado de un proyecto existente")
+    public void quieroModificarElEstadoDeUnProyectoExistente() {
         project = createProjectMock("rappiya", "descripcion", 1l, new Date(), new Date(),ProjectStatus.DEVELOPING);
         projectDTO = new ProjectDTO();
         projectDTO.setStatus(ProjectStatus.IMPLEMENTATION.getId());
@@ -200,4 +197,84 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
     public void seActualizaElEstadoDelProyectoExitosamente() {
         assertEquals("implementation", projectDTO.getStatus());
     }
+
+    @Then("No se puede crear el proyecto por error de legajo invalido")
+    public void noSePuedeCrearElProyectoPorErrorDeLegajoInvalido() {
+    }
+
+    @Given("Quiero modificar las fechas de comienzo y finalizacion de un proyecto existente")
+    public void quieroModificarLasFechasDeComienzoYFinalizacionDeUnProyectoExistente() {
+        projectDTO = new ProjectDTO();
+        project = new Project();
+    }
+
+    @When("Ingreso una fecha de fin la cual es menor a la fecha de inicio")
+    public void ingresoUnaFechaDeFinLaCualEsMenorALaFechaDeInicio() {
+        List<Date> dates = getStartAndEndDates();
+        projectDTO.setStartDate(dates.get(1));
+        projectDTO.setEndDate(dates.get(0));
+        Mockito.when(projectRepository.findProjectById(Mockito.any(Long.class))).thenReturn(project);
+        try {
+            projectDTO = projectService.updateProject(1l,projectDTO);
+        } catch(InvalidProjectException e) {
+            ipe = e;
+        }
+
+    }
+
+    @Given("Quiero modificar el responsable de un proyecto existente")
+    public void quieroModificarElResponsableDeUnProyectoExistente() {
+        projectDTO = new ProjectDTO();
+        project = new Project();
+    }
+
+    @When("Ingreso todos los datos solicitados y un legajo de responsable que no es valido")
+    public void ingresoTodosLosDatosSolicitadosYUnLegajoDeResponsableQueNoEsValido() {
+        project.setDescription("project description");
+        List<Date> dates = getStartAndEndDates();
+        project.setStartDate(dates.get(1));
+        project.setEndDate(dates.get(0));
+        project.setName("project");
+        project.setVersionId(1l);
+        try {
+            project = projectService.create(project);
+        } catch(InvalidProjectException e) {
+            ipe = e;
+        }
+    }
+
+    @When("Ingreso todos los datos solicitados y una versión de producto que ya esta asociado a otro proyecto")
+    public void ingresoTodosLosDatosSolicitadosYUnaVersiónDeProductoQueYaEstaAsociadoAOtroProyecto() {
+        project.setDescription("project description");
+        List<Date> dates = getStartAndEndDates();
+        project.setStartDate(dates.get(1));
+        project.setEndDate(dates.get(1));
+        project.setName("project");
+        project.setVersionId(2l);
+        Mockito.when(projectRepository.findByVersionId(Mockito.any(Long.class))).thenReturn(new Project());
+        try {
+            project = projectService.create(project);
+        } catch(VersionAlreadyHasProjectException e) {
+            vahpe = e;
+        }
+    }
+
+    @Then("No se puede crear el proyecto por error version ya asociada a otro proyecto")
+    public void noSePuedeCrearElProyectoPorErrorVersionYaAsociadaAOtroProyecto() {
+        assertNotNull(vahpe);
+    }
+
+/*    @When("Ingreso un legajo de responsable que no es valido")
+    public void ingresoUnLegajoDeResponsableQueNoEsValido() {
+        projectDTO.set setEmployeeId(2l);
+        projectTask.setTaskPriority(TaskPriority.MEDIUM);
+        projectTask.setTaskType(TaskType.FEATURE);
+        Mockito.when(projectRepository.findProjectById(Mockito.any(Long.class))).thenReturn(project);
+        Mockito.when(resourcesClientService.getResource(Mockito.any(Long.class))).thenThrow(new NotFoundException("error", HttpStatus.FOUND));
+        try {
+            projectDTO = projectService.updateProject(1l, projectDTO);
+        } catch(InvalidEmployeeException e) {
+            this.iee = e;
+        }
+    }*/
 }
