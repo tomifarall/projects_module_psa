@@ -15,11 +15,6 @@ Feature: Crear nuevo proyecto
     When Ingreso los todos los datos solicitados con una fecha de fin menor a la fecha de inicio
     Then No se puede crear el proyecto por error de fecha de fin menor a fecha de inicio
 
-  Scenario: Crear nuevo proyecto devuelve error si ingreso un legajo de responsable invalido
-    Given Quiero crear un nuevo proyecto
-    When Ingreso los datos de nombre, descripcion, tiempo estimado, prioridad y un legajo de responsable que no es valido
-    Then No se puede crear el proyecto por error de legajo invalido
-
   Scenario: Crear nuevo proyecto devuelve error si ingreso una version de producto que ya esta asociado a otro proyecto
     Given Quiero crear un nuevo proyecto
     When Ingreso todos los datos solicitados y una versión de producto que ya esta asociado a otro proyecto

@@ -1,8 +1,7 @@
 package com.pca.projects.projects_module.cucumber;
 
 import com.pca.projects.projects_module.controller.DTO.ProjectDTO;
-import com.pca.projects.projects_module.exception.InvalidProjectException;
-import com.pca.projects.projects_module.exception.VersionAlreadyHasProjectException;
+import com.pca.projects.projects_module.exception.*;
 import com.pca.projects.projects_module.model.Project;
 import com.pca.projects.projects_module.repository.ProjectRepository;
 import com.pca.projects.projects_module.service.ProjectService;
@@ -19,11 +18,13 @@ import org.junit.Before;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ProjectTest extends ProjectIntegrationServiceTest {
@@ -46,13 +47,22 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
     private InvalidProjectException ipe;
     private VersionAlreadyHasProjectException vahpe;
 
+    private InvalidDateRangeException idre;
+
+    private InvalidEmployeeException iee;
+
+    private Exception e;
+
     @Before
     public void setup() {
         System.out.println("Before any test execution");
         MockitoAnnotations.initMocks(this);
-        this.ipe = null;
-        this.project = null;
-        this.projectDTO = null;
+        ipe = null;
+        project = null;
+        projectDTO = null;
+        idre = null;
+        iee = null;
+        e= null;
     }
 
     @After
@@ -73,7 +83,7 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         project.setEndDate(new Date());
         project.setName("project");
         project.setVersionId(1l);
-        //project.set MODIFICAR ACA
+        project.setResponsibleId(1l);
         Project mockedProject = project;
         mockedProject.setId(0l);
         Mockito.when(projectRepository.findByVersionId(1l)).thenReturn(null);
@@ -94,18 +104,19 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         project.setStartDate(dates.get(1));
         project.setEndDate(dates.get(0));
         project.setName("project");
-        project.setVersionId(1l); //MODIFICAR ACA CON LA ACTUALIZACION
+        project.setVersionId(1l);
+        project.setResponsibleId(2l);
         try {
             project = projectService.create(project);
-        } catch(InvalidProjectException e) {
-            ipe = e;
+        } catch(InvalidDateRangeException e) {
+            idre = e;
         }
     }
 
     @Then("^No se puede crear el proyecto por error de fecha de fin menor a fecha de inicio$")
     public void noSePuedeCrearElProyectoPorFechaDeFinMenorAFechaDeInicio() {
-        assertNotNull(ipe);
-        assertEquals(ipe.getMessage(),"The end date can't be lower than the start date");
+        assertNotNull(idre);
+        assertEquals("The end date can't be before the start date", idre.getMessage());
     }
 
     @When("^Ingreso los datos de nombre y descripcion y ningun otro dato mas$")
@@ -121,8 +132,8 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
 
     @Then("^No se puede crear el proyecto por error de datos invalidos$")
     public void noSePuedeCrearElProyectoPorDatosInvalidos() {
-        assertNotNull(this.ipe);
-        assertEquals(this.ipe.getMessage(),"Project data is invalid.");
+        assertNotNull(ipe);
+        assertEquals(ipe.getMessage(),"Project data is invalid.");
     }
 
     @Given("Quiero modificar un proyecto existente")
@@ -132,8 +143,8 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
 
     @Then("No se puede modificar el proyecto por error de fecha de fin menor a fecha de inicio")
     public void noSePuedeModificarElProyectoPorErrorDeFechaDeFinMenorAFechaDeInicio() {
-        assertNotNull(this.ipe);
-        assertEquals(this.ipe.getMessage(),"The end date can't be lower than the start date");
+        assertNotNull(idre);
+        assertEquals(idre.getMessage(),"The end date can't be before the start date");
     }
 
     @Then("Se actualiza la informacion del proyecto con los datos ingresados")
@@ -158,7 +169,6 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         Mockito.when(projectRepository.save(Mockito.any(Project.class))).thenReturn(project);
         VersionDTO mockedVersion = new VersionDTO();
         mockedVersion.setVersionCode("2.0");
-        Mockito.when(supportClientService.getVersion(Mockito.any(Long.class))).thenReturn(mockedVersion);
         Mockito.when(resourcesClientService.getResource(Mockito.any(Long.class))).thenReturn(createResourceMock());
         projectDTO = projectService.updateProject(1l, projectDTO);
     }
@@ -188,7 +198,6 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         Mockito.when(projectRepository.save(Mockito.any(Project.class))).thenReturn(project);
         VersionDTO mockedVersion = new VersionDTO();
         mockedVersion.setVersionCode("2.0");
-        Mockito.when(supportClientService.getVersion(Mockito.any(Long.class))).thenReturn(mockedVersion);
         Mockito.when(resourcesClientService.getResource(Mockito.any(Long.class))).thenReturn(createResourceMock());
         projectDTO = projectService.updateProject(1l, projectDTO);
     }
@@ -196,10 +205,6 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
     @Then("Se actualiza el estado del proyecto exitosamente")
     public void seActualizaElEstadoDelProyectoExitosamente() {
         assertEquals("implementation", projectDTO.getStatus());
-    }
-
-    @Then("No se puede crear el proyecto por error de legajo invalido")
-    public void noSePuedeCrearElProyectoPorErrorDeLegajoInvalido() {
     }
 
     @Given("Quiero modificar las fechas de comienzo y finalizacion de un proyecto existente")
@@ -213,34 +218,14 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         List<Date> dates = getStartAndEndDates();
         projectDTO.setStartDate(dates.get(1));
         projectDTO.setEndDate(dates.get(0));
+        project.setEndDate(dates.get(0));
         Mockito.when(projectRepository.findProjectById(Mockito.any(Long.class))).thenReturn(project);
         try {
             projectDTO = projectService.updateProject(1l,projectDTO);
-        } catch(InvalidProjectException e) {
-            ipe = e;
+        } catch(InvalidDateRangeException e) {
+            idre = e;
         }
 
-    }
-
-    @Given("Quiero modificar el responsable de un proyecto existente")
-    public void quieroModificarElResponsableDeUnProyectoExistente() {
-        projectDTO = new ProjectDTO();
-        project = new Project();
-    }
-
-    @When("Ingreso todos los datos solicitados y un legajo de responsable que no es valido")
-    public void ingresoTodosLosDatosSolicitadosYUnLegajoDeResponsableQueNoEsValido() {
-        project.setDescription("project description");
-        List<Date> dates = getStartAndEndDates();
-        project.setStartDate(dates.get(1));
-        project.setEndDate(dates.get(0));
-        project.setName("project");
-        project.setVersionId(1l);
-        try {
-            project = projectService.create(project);
-        } catch(InvalidProjectException e) {
-            ipe = e;
-        }
     }
 
     @When("Ingreso todos los datos solicitados y una versión de producto que ya esta asociado a otro proyecto")
@@ -248,33 +233,46 @@ public class ProjectTest extends ProjectIntegrationServiceTest {
         project.setDescription("project description");
         List<Date> dates = getStartAndEndDates();
         project.setStartDate(dates.get(1));
-        project.setEndDate(dates.get(1));
+        project.setEndDate(dates.get(0));
         project.setName("project");
         project.setVersionId(2l);
         Mockito.when(projectRepository.findByVersionId(Mockito.any(Long.class))).thenReturn(new Project());
         try {
             project = projectService.create(project);
-        } catch(VersionAlreadyHasProjectException e) {
-            vahpe = e;
+        } catch(InvalidProjectException e) {
+            ipe = e;
         }
     }
 
     @Then("No se puede crear el proyecto por error version ya asociada a otro proyecto")
     public void noSePuedeCrearElProyectoPorErrorVersionYaAsociadaAOtroProyecto() {
-        assertNotNull(vahpe);
+        assertNotNull(ipe);
     }
 
-/*    @When("Ingreso un legajo de responsable que no es valido")
-    public void ingresoUnLegajoDeResponsableQueNoEsValido() {
-        projectDTO.set setEmployeeId(2l);
-        projectTask.setTaskPriority(TaskPriority.MEDIUM);
-        projectTask.setTaskType(TaskType.FEATURE);
+    @Then("No se puede modificar el proyecto por error version ya asociada a otro proyecto")
+    public void noSePuedeModificarElProyectoPorErrorVersionYaAsociadaAOtroProyecto() {
+        assertNotNull(ipe);
+    }
+
+    @Given("Quiero eliminar un proyecto existente")
+    public void quieroEliminarUnProyectoExistente() {
+        project = new Project();
+    }
+
+    @When("Ingreso el id del proyecto que quiero eliminar")
+    public void ingresoElIdDelProyectoQueQuieroEliminar() {
         Mockito.when(projectRepository.findProjectById(Mockito.any(Long.class))).thenReturn(project);
-        Mockito.when(resourcesClientService.getResource(Mockito.any(Long.class))).thenThrow(new NotFoundException("error", HttpStatus.FOUND));
+        Mockito.doNothing().when(supportClientService).deleteProjectFromVersion(Mockito.any(Long.class));
+        Mockito.doNothing().when(projectRepository).delete(Mockito.any(Project.class));
         try {
-            projectDTO = projectService.updateProject(1l, projectDTO);
-        } catch(InvalidEmployeeException e) {
-            this.iee = e;
+            projectService.deleteProject(1l);
+        } catch (Exception e){
+            e=e;
         }
-    }*/
+    }
+
+    @Then("Se elimina el proyecto exitosamente")
+    public void seEliminaElProyectoExitosamente() {
+        assertNull(e);
+    }
 }

@@ -49,7 +49,8 @@ public class ProjectIntegrationServiceTest {
         Calendar c = Calendar.getInstance();
         c.setTime(biggestDate);
         c.add(Calendar.DATE, 10);
-        list.addAll(Arrays.asList(new Date(), c.getTime()));
+        list.add(new Date());
+        list.add(c.getTime());
         return list;
     }
 
