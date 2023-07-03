@@ -1,10 +1,12 @@
 package com.pca.projects.projects_module.cucumber;
 
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/cucumber")
+@CucumberOptions(plugin = {"pretty"},
+        glue = {"com.cucumber.test"},
+        features = "x/y/resources")
 public class CucumberTest {
 }
